@@ -299,77 +299,7 @@ export function ExtensionHistoryCard({ extensionLogs = [], permit = null }) {
                       </div>
                     )}
 
-                    {/* TENANT RELATION APPROVAL DECISION BOX */}
-                    {isApproved && (
-                      <div
-                        className="rounded-3 border"
-                        style={{
-                          backgroundColor: '#f0fdf4',
-                          borderColor: '#86efac',
-                          padding: '22px 24px',
-                          marginTop: '24px',
-                        }}
-                      >
-                        {/* Approval Header Row */}
-                        <div
-                          className="d-flex align-items-center justify-content-between flex-wrap gap-2"
-                          style={{ marginBottom: '16px' }}
-                        >
-                          <div className="d-flex align-items-center gap-2">
-                            <CheckCircle size={18} weight="bold" color="#16a34a" />
-                            <span
-                              className="fw-bold text-success text-uppercase"
-                              style={{ fontSize: '0.78rem', letterSpacing: '0.04em' }}
-                            >
-                              TENANT RELATION DECISION (APPROVED -{' '}
-                              {item.status === 'APPROVED_FREE' ? 'FREE OF CHARGE' : 'CHARGEABLE'})
-                            </span>
-                          </div>
-                          <span className="text-muted small" style={{ fontSize: '0.74rem' }}>
-                            {item.decidedAt}
-                          </span>
-                        </div>
 
-                        {/* Approval Notes Text in Spacious Pure White Card */}
-                        {item.decisionReason && (
-                          <div
-                            className="bg-white rounded-2 border fst-italic text-dark"
-                            style={{
-                              borderColor: '#86efac',
-                              padding: '16px 20px',
-                              fontSize: '0.88rem',
-                              lineHeight: '1.6',
-                              color: '#1e293b',
-                              marginBottom: '16px',
-                            }}
-                          >
-                            &ldquo;{item.decisionReason}&rdquo;
-                          </div>
-                        )}
-
-                        {/* Evaluator Footer with Generous Top Padding */}
-                        <div
-                          className="d-flex align-items-center justify-content-between flex-wrap gap-2 text-muted border-top"
-                          style={{
-                            borderColor: '#bbf7d0',
-                            paddingTop: '14px',
-                            fontSize: '0.76rem',
-                          }}
-                        >
-                          <span>
-                            Approved by: <strong>{item.decidedBy || 'Tenant Relation Lead - Management'}</strong>
-                          </span>
-                          <span>
-                            Policy:{' '}
-                            <strong className="text-success">
-                              {item.status === 'APPROVED_FREE'
-                                ? 'Free Tolerance Exemption'
-                                : 'Supervision Chargeable'}
-                            </strong>
-                          </span>
-                        </div>
-                      </div>
-                    )}
 
                     {/* 4. FIT OUT EXTENSION BILL INFORMATION (Integrated for Chargeable Extensions) */}
                     {isChargeable && (
