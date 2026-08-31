@@ -78,7 +78,7 @@ export function usePermitController() {
   const [extensionLogs, setExtensionLogs] = useState([
     {
       id: 'EXT-LOG-002',
-      title: 'Extension Request #2 (+3 Days)',
+      title: 'Extension Request #2',
       requestedBy: 'Budi Santoso (Engineering Lead 01)',
       requestedAt: '10/08/2026, 02:30 PM',
       requestedDays: 3,
@@ -90,7 +90,7 @@ export function usePermitController() {
     },
     {
       id: 'EXT-LOG-001',
-      title: 'Extension Request #1 (+2 Days)',
+      title: 'Extension Request #1',
       requestedBy: 'Budi Santoso (Engineering Lead 01)',
       requestedAt: '08/08/2026, 11:20 AM',
       requestedDays: 2,
@@ -493,7 +493,7 @@ export function usePermitController() {
     setExtensionLogs((prev) => [
       {
         id: `EXT-LOG-${Date.now().toString().slice(-3)}`,
-        title: `Extension Request #${prev.length + 1} (+4 Days)`,
+        title: `Extension Request #${prev.length + 1}`,
         requestedBy: 'Budi Santoso (Engineering Lead 01)',
         requestedAt: '10/08/2026, 04:00 PM',
         requestedDays: 4,

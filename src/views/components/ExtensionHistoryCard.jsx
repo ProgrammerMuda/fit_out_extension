@@ -76,7 +76,7 @@ export function ExtensionHistoryCard({ extensionLogs = [] }) {
                     borderColor: isRejected ? '#fca5a5' : '#e2e8f0',
                   }}
                 >
-                  {/* Card Item Header: Generous 16px 24px Padding */}
+                  {/* Card Item Header: Clean Title on Left, Status Badge on Right */}
                   <div
                     className="d-flex align-items-center justify-content-between flex-wrap gap-3 border-bottom"
                     style={{
@@ -85,24 +85,9 @@ export function ExtensionHistoryCard({ extensionLogs = [] }) {
                       padding: '16px 24px',
                     }}
                   >
-                    <div className="d-flex align-items-center gap-2.5 flex-wrap">
-                      <span className="fw-bold text-dark" style={{ fontSize: '0.92rem' }}>
-                        {item.title}
-                      </span>
-                      {item.requestedDays && (
-                        <span
-                          className="badge rounded-pill fw-semibold"
-                          style={{
-                            backgroundColor: '#f1f5f9',
-                            color: '#334155',
-                            fontSize: '0.74rem',
-                            padding: '0.3rem 0.7rem',
-                          }}
-                        >
-                          +{item.requestedDays} Days &bull; until {item.targetDate}
-                        </span>
-                      )}
-                    </div>
+                    <span className="fw-bold text-dark" style={{ fontSize: '0.92rem' }}>
+                      {item.title}
+                    </span>
 
                     <span
                       className="badge rounded-pill fw-bold"
@@ -120,7 +105,7 @@ export function ExtensionHistoryCard({ extensionLogs = [] }) {
 
                   {/* Card Item Body: Generous 24px Padding */}
                   <div style={{ padding: '24px' }}>
-                    {/* Submitter Info Row: Generous Spacing */}
+                    {/* Submitter & Extension Period Info Row: 3 Columns */}
                     <div
                       className="row g-3 border-bottom"
                       style={{
@@ -129,7 +114,8 @@ export function ExtensionHistoryCard({ extensionLogs = [] }) {
                         marginBottom: '24px',
                       }}
                     >
-                      <div className="col-12 col-sm-6">
+                      {/* 1. Requested By */}
+                      <div className="col-12 col-md-4">
                         <div
                           className="text-muted fw-semibold text-uppercase"
                           style={{ fontSize: '0.7rem', letterSpacing: '0.04em', marginBottom: '6px' }}
@@ -140,7 +126,25 @@ export function ExtensionHistoryCard({ extensionLogs = [] }) {
                           {item.requestedBy || 'Budi Santoso (Engineering Lead 01)'}
                         </div>
                       </div>
-                      <div className="col-12 col-sm-6">
+
+                      {/* 2. Requested Extension Period */}
+                      <div className="col-12 col-md-4">
+                        <div
+                          className="text-muted fw-semibold text-uppercase"
+                          style={{ fontSize: '0.7rem', letterSpacing: '0.04em', marginBottom: '6px' }}
+                        >
+                          REQUESTED EXTENSION
+                        </div>
+                        <div className="fw-bold text-dark d-flex align-items-center gap-1.5" style={{ fontSize: '0.88rem' }}>
+                          <span>+{item.requestedDays || 3} Days</span>
+                          <span className="text-secondary fw-normal" style={{ fontSize: '0.82rem' }}>
+                            (until {item.targetDate})
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* 3. Submitted At */}
+                      <div className="col-12 col-md-4">
                         <div
                           className="text-muted fw-semibold text-uppercase"
                           style={{ fontSize: '0.7rem', letterSpacing: '0.04em', marginBottom: '6px' }}
