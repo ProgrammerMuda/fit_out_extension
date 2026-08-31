@@ -119,11 +119,16 @@ export function RequestInformationCard({ permit }) {
           )}
         </div>
 
-        {/* Field: Request Photos (3 Water Pipe Photos) */}
+        {/* Field: Request Photos (Documentation Photos) */}
         <div>
-          <div className="d-flex align-items-center gap-1 text-muted text-uppercase fw-bold mb-2" style={{ fontSize: '0.7rem', letterSpacing: '0.04em' }}>
-            <ImageIcon size={14} />
-            <span>REQUEST PHOTOS</span>
+          <div
+            className="fw-bold text-uppercase text-dark d-flex align-items-center gap-1.5"
+            style={{ fontSize: '0.74rem', letterSpacing: '0.04em', marginBottom: '12px' }}
+          >
+            <ImageIcon size={16} weight="bold" />
+            <span>
+              REQUEST PHOTOS {permit.photos && permit.photos.length > 0 ? `(${permit.photos.length} PHOTOS)` : ''}
+            </span>
           </div>
 
           <div className="d-flex flex-wrap gap-3">
