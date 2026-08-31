@@ -51,7 +51,7 @@ export function ExtensionHistoryCard({ extensionLogs = [] }) {
               let badgeText = 'RECORDED';
 
               if (isRejected) {
-                badgeBg = '#fee2e2';
+                badgeBg = '#ffffff';
                 badgeColor = '#dc2626';
                 badgeText = 'REJECTED';
               } else if (isPending) {
@@ -76,12 +76,15 @@ export function ExtensionHistoryCard({ extensionLogs = [] }) {
                   <div
                     className="d-flex align-items-center justify-content-between flex-wrap gap-3 border-bottom"
                     style={{
-                      backgroundColor: isRejected ? '#fffaf8' : '#f8fafc',
-                      borderColor: isRejected ? '#fecaca' : '#e2e8f0',
+                      backgroundColor: isRejected ? '#fee2e2' : '#f8fafc',
+                      borderColor: isRejected ? '#fca5a5' : '#e2e8f0',
                       padding: '16px 24px',
                     }}
                   >
-                    <span className="fw-bold text-dark" style={{ fontSize: '0.92rem' }}>
+                    <span
+                      className="fw-bold"
+                      style={{ fontSize: '0.92rem', color: isRejected ? '#991b1b' : '#0f172a' }}
+                    >
                       {item.title}
                     </span>
 
@@ -90,6 +93,7 @@ export function ExtensionHistoryCard({ extensionLogs = [] }) {
                       style={{
                         backgroundColor: badgeBg,
                         color: badgeColor,
+                        border: isRejected ? '1px solid #fca5a5' : 'none',
                         fontSize: '0.72rem',
                         padding: '0.35rem 0.85rem',
                         letterSpacing: '0.03em',
