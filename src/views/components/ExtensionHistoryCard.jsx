@@ -21,34 +21,38 @@ export function ExtensionHistoryCard({ extensionLogs = [] }) {
   ).length;
 
   return (
-    <div className="proa-card overflow-hidden mb-3">
-      {/* Light Gray Card Header */}
+    <div className="proa-card overflow-hidden mb-4">
+      {/* Light Gray Card Header: Generous 18px 24px Padding */}
       <div
-        className="p-3 px-4 d-flex align-items-center justify-content-between border-bottom"
-        style={{ backgroundColor: '#f8fafc', borderColor: '#e2e8f0' }}
+        className="d-flex align-items-center justify-content-between border-bottom"
+        style={{
+          backgroundColor: '#f8fafc',
+          borderColor: '#e2e8f0',
+          padding: '18px 24px',
+        }}
       >
-        <div className="d-flex align-items-center gap-2">
+        <div className="d-flex align-items-center gap-2.5">
           <div className="d-flex align-items-center flex-shrink-0" style={{ color: '#27b29b' }}>
-            <ClockCounterClockwise size={21} weight="bold" />
+            <ClockCounterClockwise size={22} weight="bold" />
           </div>
           <span
             className="fw-bold text-dark text-uppercase"
-            style={{ letterSpacing: '0.04em', fontSize: '0.84rem', lineHeight: 1 }}
+            style={{ letterSpacing: '0.04em', fontSize: '0.86rem', lineHeight: 1 }}
           >
             EXTENSION HISTORY
           </span>
         </div>
 
         {/* Status Count Badges */}
-        <div className="d-flex align-items-center gap-1.5">
+        <div className="d-flex align-items-center gap-2">
           {rejectedCount > 0 && (
             <span
               className="badge rounded-pill fw-bold"
               style={{
                 backgroundColor: '#fee2e2',
                 color: '#dc2626',
-                fontSize: '0.68rem',
-                padding: '0.28rem 0.65rem',
+                fontSize: '0.72rem',
+                padding: '0.35rem 0.75rem',
               }}
             >
               {rejectedCount} Rejected
@@ -60,8 +64,8 @@ export function ExtensionHistoryCard({ extensionLogs = [] }) {
               style={{
                 backgroundColor: '#fff7ed',
                 color: '#ea580c',
-                fontSize: '0.68rem',
-                padding: '0.28rem 0.65rem',
+                fontSize: '0.72rem',
+                padding: '0.35rem 0.75rem',
               }}
             >
               {pendingCount} Pending Review
@@ -73,8 +77,8 @@ export function ExtensionHistoryCard({ extensionLogs = [] }) {
               style={{
                 backgroundColor: '#ecfdf5',
                 color: '#059669',
-                fontSize: '0.68rem',
-                padding: '0.28rem 0.65rem',
+                fontSize: '0.72rem',
+                padding: '0.35rem 0.75rem',
               }}
             >
               {approvedCount} Approved
@@ -83,14 +87,14 @@ export function ExtensionHistoryCard({ extensionLogs = [] }) {
         </div>
       </div>
 
-      {/* Card Body */}
-      <div className="p-4">
+      {/* Card Body: Generous 24px Padding */}
+      <div style={{ padding: '24px' }}>
         {extensionLogs.length === 0 ? (
-          <div className="text-center py-4 text-muted small">
+          <div className="text-center py-5 text-muted small">
             No extension records found for this permit.
           </div>
         ) : (
-          <div className="d-flex flex-column gap-3">
+          <div className="d-flex flex-column gap-4">
             {extensionLogs.map((item, index) => {
               const isRejected = item.status === 'REJECTED';
               const isPending = item.status === 'PENDING_TR_REVIEW';
@@ -119,18 +123,21 @@ export function ExtensionHistoryCard({ extensionLogs = [] }) {
                 <div
                   key={item.id || index}
                   className="rounded-3 border overflow-hidden bg-white shadow-xs"
-                  style={{ borderColor: isRejected ? '#fecaca' : '#e2e8f0' }}
+                  style={{
+                    borderColor: isRejected ? '#fca5a5' : '#e2e8f0',
+                  }}
                 >
-                  {/* Card Item Header */}
+                  {/* Card Item Header: Generous 16px 24px Padding */}
                   <div
-                    className="p-3 px-3.5 d-flex align-items-center justify-content-between flex-wrap gap-2 border-bottom"
+                    className="d-flex align-items-center justify-content-between flex-wrap gap-3 border-bottom"
                     style={{
-                      backgroundColor: isRejected ? '#fffbfb' : '#f8fafc',
-                      borderColor: isRejected ? '#fee2e2' : '#e2e8f0',
+                      backgroundColor: isRejected ? '#fffaf8' : '#f8fafc',
+                      borderColor: isRejected ? '#fecaca' : '#e2e8f0',
+                      padding: '16px 24px',
                     }}
                   >
-                    <div className="d-flex align-items-center gap-2 flex-wrap">
-                      <span className="fw-bold text-dark" style={{ fontSize: '0.88rem' }}>
+                    <div className="d-flex align-items-center gap-2.5 flex-wrap">
+                      <span className="fw-bold text-dark" style={{ fontSize: '0.92rem' }}>
                         {item.title}
                       </span>
                       {item.requestedDays && (
@@ -139,8 +146,8 @@ export function ExtensionHistoryCard({ extensionLogs = [] }) {
                           style={{
                             backgroundColor: '#f1f5f9',
                             color: '#334155',
-                            fontSize: '0.72rem',
-                            padding: '0.25rem 0.6rem',
+                            fontSize: '0.74rem',
+                            padding: '0.3rem 0.7rem',
                           }}
                         >
                           +{item.requestedDays} Days &bull; until {item.targetDate}
@@ -153,8 +160,8 @@ export function ExtensionHistoryCard({ extensionLogs = [] }) {
                       style={{
                         backgroundColor: badgeBg,
                         color: badgeColor,
-                        fontSize: '0.68rem',
-                        padding: '0.3rem 0.75rem',
+                        fontSize: '0.72rem',
+                        padding: '0.35rem 0.85rem',
                         letterSpacing: '0.03em',
                       }}
                     >
@@ -162,44 +169,58 @@ export function ExtensionHistoryCard({ extensionLogs = [] }) {
                     </span>
                   </div>
 
-                  {/* Card Item Body */}
-                  <div className="p-3.5 px-4">
-                    {/* Submitter Info Row */}
-                    <div className="row g-2 mb-3 pb-2 border-bottom" style={{ borderColor: '#f1f5f9' }}>
+                  {/* Card Item Body: Generous 24px Padding */}
+                  <div style={{ padding: '24px' }}>
+                    {/* Submitter Info Row: Generous Spacing */}
+                    <div
+                      className="row g-3 border-bottom"
+                      style={{
+                        borderColor: '#f1f5f9',
+                        paddingBottom: '20px',
+                        marginBottom: '24px',
+                      }}
+                    >
                       <div className="col-12 col-sm-6">
-                        <div className="text-muted fw-semibold text-uppercase" style={{ fontSize: '0.68rem', letterSpacing: '0.03em' }}>
+                        <div
+                          className="text-muted fw-semibold text-uppercase"
+                          style={{ fontSize: '0.7rem', letterSpacing: '0.04em', marginBottom: '6px' }}
+                        >
                           REQUESTED BY
                         </div>
-                        <div className="fw-bold text-dark mt-0.5" style={{ fontSize: '0.84rem' }}>
+                        <div className="fw-bold text-dark" style={{ fontSize: '0.88rem' }}>
                           {item.requestedBy || 'Budi Santoso (Engineering Lead 01)'}
                         </div>
                       </div>
                       <div className="col-12 col-sm-6">
-                        <div className="text-muted fw-semibold text-uppercase" style={{ fontSize: '0.68rem', letterSpacing: '0.03em' }}>
+                        <div
+                          className="text-muted fw-semibold text-uppercase"
+                          style={{ fontSize: '0.7rem', letterSpacing: '0.04em', marginBottom: '6px' }}
+                        >
                           SUBMITTED AT
                         </div>
-                        <div className="text-secondary fw-semibold mt-0.5" style={{ fontSize: '0.82rem' }}>
+                        <div className="text-secondary fw-semibold" style={{ fontSize: '0.86rem' }}>
                           {item.requestedAt}
                         </div>
                       </div>
                     </div>
 
-                    {/* Engineering Technical Reason Section */}
+                    {/* Engineering Technical Reason Section: Spacious 18px 22px Box */}
                     {item.requestReason && (
-                      <div className="mb-3">
+                      <div style={{ marginBottom: '24px' }}>
                         <div
-                          className="fw-bold text-uppercase text-dark mb-1.5"
-                          style={{ fontSize: '0.72rem', letterSpacing: '0.04em' }}
+                          className="fw-bold text-uppercase text-dark"
+                          style={{ fontSize: '0.74rem', letterSpacing: '0.04em', marginBottom: '10px' }}
                         >
                           TECHNICAL NOTES
                         </div>
                         <div
-                          className="fst-italic text-secondary rounded-2 border bg-light"
+                          className="fst-italic rounded-2 border"
                           style={{
-                            fontSize: '0.84rem',
-                            lineHeight: '1.55',
-                            padding: '12px 14px',
+                            backgroundColor: '#f8fafc',
                             borderColor: '#e2e8f0',
+                            padding: '16px 20px',
+                            fontSize: '0.88rem',
+                            lineHeight: '1.6',
                             color: '#334155',
                           }}
                         >
@@ -208,22 +229,22 @@ export function ExtensionHistoryCard({ extensionLogs = [] }) {
                       </div>
                     )}
 
-                    {/* Attached Photos (if available) */}
+                    {/* Attached Photos: Spacious Gallery */}
                     {item.photos && item.photos.length > 0 && (
-                      <div className="mb-3">
+                      <div style={{ marginBottom: '24px' }}>
                         <div
-                          className="fw-bold text-uppercase text-dark mb-1.5 d-flex align-items-center gap-1.5"
-                          style={{ fontSize: '0.72rem', letterSpacing: '0.04em' }}
+                          className="fw-bold text-uppercase text-dark d-flex align-items-center gap-1.5"
+                          style={{ fontSize: '0.74rem', letterSpacing: '0.04em', marginBottom: '12px' }}
                         >
-                          <ImageIcon size={14} weight="bold" />
-                          <span>REQUEST PHOTOS ({item.photos.length})</span>
+                          <ImageIcon size={16} weight="bold" />
+                          <span>REQUEST PHOTOS ({item.photos.length} PHOTOS)</span>
                         </div>
-                        <div className="d-flex align-items-center gap-2 flex-wrap">
+                        <div className="d-flex align-items-center gap-3 flex-wrap">
                           {item.photos.map((src, pIdx) => (
                             <div
                               key={pIdx}
-                              className="position-relative rounded-2 overflow-hidden border cursor-pointer group"
-                              style={{ width: '56px', height: '56px', borderColor: '#e2e8f0' }}
+                              className="position-relative rounded-3 overflow-hidden border cursor-pointer group shadow-xs"
+                              style={{ width: '64px', height: '64px', borderColor: '#e2e8f0' }}
                               onClick={() => setSelectedPhoto(src)}
                               title="Click to view full photo"
                             >
@@ -235,13 +256,13 @@ export function ExtensionHistoryCard({ extensionLogs = [] }) {
                               <div
                                 className="position-absolute bottom-0 end-0 bg-dark text-white d-flex align-items-center justify-content-center"
                                 style={{
-                                  width: '18px',
-                                  height: '18px',
-                                  opacity: 0.8,
-                                  borderTopLeftRadius: '4px',
+                                  width: '20px',
+                                  height: '20px',
+                                  opacity: 0.85,
+                                  borderTopLeftRadius: '5px',
                                 }}
                               >
-                                <MagnifyingGlassPlus size={11} weight="bold" />
+                                <MagnifyingGlassPlus size={12} weight="bold" />
                               </div>
                             </div>
                           ))}
@@ -249,47 +270,59 @@ export function ExtensionHistoryCard({ extensionLogs = [] }) {
                       </div>
                     )}
 
-                    {/* TENANT RELATION REJECTION DECISION BOX */}
+                    {/* TENANT RELATION REJECTION DECISION BOX: Generous 22px 24px Padding & 16px Separation */}
                     {isRejected && (
                       <div
-                        className="rounded-3 border p-3 mt-3"
+                        className="rounded-3 border"
                         style={{
                           backgroundColor: '#fff5f5',
                           borderColor: '#fca5a5',
+                          padding: '22px 24px',
+                          marginTop: '24px',
                         }}
                       >
-                        <div className="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-2">
-                          <div className="d-flex align-items-center gap-1.5">
-                            <XCircle size={17} weight="bold" color="#dc2626" />
+                        {/* Rejection Header Row */}
+                        <div
+                          className="d-flex align-items-center justify-content-between flex-wrap gap-2"
+                          style={{ marginBottom: '16px' }}
+                        >
+                          <div className="d-flex align-items-center gap-2">
+                            <XCircle size={18} weight="bold" color="#dc2626" />
                             <span
                               className="fw-bold text-danger text-uppercase"
-                              style={{ fontSize: '0.76rem', letterSpacing: '0.04em' }}
+                              style={{ fontSize: '0.78rem', letterSpacing: '0.04em' }}
                             >
                               TENANT RELATION DECISION NOTES (REJECTED)
                             </span>
                           </div>
-                          <span className="text-muted small" style={{ fontSize: '0.72rem' }}>
+                          <span className="text-muted small" style={{ fontSize: '0.74rem' }}>
                             {item.decidedAt}
                           </span>
                         </div>
 
-                        {/* Rejection Reason Text in Clean White Box */}
+                        {/* Rejection Reason Text in Spacious Pure White Card */}
                         <div
-                          className="bg-white rounded-2 border p-3 mb-2 text-dark fst-italic"
+                          className="bg-white rounded-2 border fst-italic text-dark"
                           style={{
-                            fontSize: '0.84rem',
-                            lineHeight: '1.55',
                             borderColor: '#fca5a5',
+                            padding: '16px 20px',
+                            fontSize: '0.88rem',
+                            lineHeight: '1.6',
                             color: '#1e293b',
+                            marginBottom: '16px',
                           }}
                         >
                           &ldquo;{item.decisionReason}&rdquo;
                         </div>
 
-                        {/* Evaluator Footer */}
+                        {/* Evaluator Footer with Generous Top Padding */}
                         <div
-                          className="d-flex align-items-center justify-content-between flex-wrap gap-2 text-muted pt-2 border-top"
-                          style={{ borderColor: '#fecaca', fontSize: '0.74rem' }}
+                          className="d-flex align-items-center justify-content-between flex-wrap gap-2 text-muted border-top"
+                          style={{
+                            borderColor: '#fecaca',
+                            paddingTop: '14px',
+                            fontSize: '0.76rem',
+                          }}
                         >
                           <span>
                             Decided by: <strong>{item.decidedBy || 'Tenant Relation Lead - Management'}</strong>
@@ -301,49 +334,61 @@ export function ExtensionHistoryCard({ extensionLogs = [] }) {
                       </div>
                     )}
 
-                    {/* TENANT RELATION APPROVAL DECISION BOX */}
+                    {/* TENANT RELATION APPROVAL DECISION BOX: Generous 22px 24px Padding & 16px Separation */}
                     {isApproved && (
                       <div
-                        className="rounded-3 border p-3 mt-3"
+                        className="rounded-3 border"
                         style={{
                           backgroundColor: '#f0fdf4',
                           borderColor: '#86efac',
+                          padding: '22px 24px',
+                          marginTop: '24px',
                         }}
                       >
-                        <div className="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-2">
-                          <div className="d-flex align-items-center gap-1.5">
-                            <CheckCircle size={17} weight="bold" color="#16a34a" />
+                        {/* Approval Header Row */}
+                        <div
+                          className="d-flex align-items-center justify-content-between flex-wrap gap-2"
+                          style={{ marginBottom: '16px' }}
+                        >
+                          <div className="d-flex align-items-center gap-2">
+                            <CheckCircle size={18} weight="bold" color="#16a34a" />
                             <span
                               className="fw-bold text-success text-uppercase"
-                              style={{ fontSize: '0.76rem', letterSpacing: '0.04em' }}
+                              style={{ fontSize: '0.78rem', letterSpacing: '0.04em' }}
                             >
                               TENANT RELATION DECISION (APPROVED - {item.status === 'APPROVED_FREE' ? 'FREE OF CHARGE' : 'CHARGEABLE'})
                             </span>
                           </div>
-                          <span className="text-muted small" style={{ fontSize: '0.72rem' }}>
+                          <span className="text-muted small" style={{ fontSize: '0.74rem' }}>
                             {item.decidedAt}
                           </span>
                         </div>
 
-                        {/* Approval Notes Text in Clean White Box */}
+                        {/* Approval Notes Text in Spacious Pure White Card */}
                         {item.decisionReason && (
                           <div
-                            className="bg-white rounded-2 border p-3 mb-2 text-dark fst-italic"
+                            className="bg-white rounded-2 border fst-italic text-dark"
                             style={{
-                              fontSize: '0.84rem',
-                              lineHeight: '1.55',
                               borderColor: '#86efac',
+                              padding: '16px 20px',
+                              fontSize: '0.88rem',
+                              lineHeight: '1.6',
                               color: '#1e293b',
+                              marginBottom: '16px',
                             }}
                           >
                             &ldquo;{item.decisionReason}&rdquo;
                           </div>
                         )}
 
-                        {/* Evaluator Footer */}
+                        {/* Evaluator Footer with Generous Top Padding */}
                         <div
-                          className="d-flex align-items-center justify-content-between flex-wrap gap-2 text-muted pt-2 border-top"
-                          style={{ borderColor: '#bbf7d0', fontSize: '0.74rem' }}
+                          className="d-flex align-items-center justify-content-between flex-wrap gap-2 text-muted border-top"
+                          style={{
+                            borderColor: '#bbf7d0',
+                            paddingTop: '14px',
+                            fontSize: '0.76rem',
+                          }}
                         >
                           <span>
                             Approved by: <strong>{item.decidedBy || 'Tenant Relation Lead - Management'}</strong>
@@ -364,10 +409,10 @@ export function ExtensionHistoryCard({ extensionLogs = [] }) {
 
       {/* Lightbox Modal */}
       <Modal show={!!selectedPhoto} onHide={() => setSelectedPhoto(null)} centered size="lg">
-        <Modal.Header closeButton style={{ backgroundColor: '#f8fafc' }}>
+        <Modal.Header closeButton style={{ backgroundColor: '#f8fafc', padding: '16px 20px' }}>
           <Modal.Title className="fs-6 fw-bold text-dark">Technical Inspection Photo</Modal.Title>
         </Modal.Header>
-        <Modal.Body className="p-3 text-center bg-dark">
+        <Modal.Body className="p-4 text-center bg-dark">
           {selectedPhoto && (
             <img
               src={selectedPhoto}
