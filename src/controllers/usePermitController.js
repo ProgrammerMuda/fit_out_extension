@@ -213,6 +213,13 @@ export function usePermitController() {
       isPaid: false,
     });
 
+    // Update Engineering Request Status to Approved
+    if (engineeringRequest) {
+      setEngineeringRequest((prev) =>
+        prev ? { ...prev, status: isChargeable ? 'APPROVED_CHARGEABLE' : 'APPROVED_FREE' } : null
+      );
+    }
+
     // If chargeable, create dedicated separate Extension Bill card
     if (isChargeable) {
       setExtensionBill({
