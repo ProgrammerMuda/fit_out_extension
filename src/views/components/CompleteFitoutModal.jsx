@@ -1,93 +1,39 @@
-import React, { useState, useMemo, useRef } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { Modal, Form } from 'react-bootstrap';
-import {
-  CheckCircle,
-  CloudArrowUp,
-  FileImage,
-  FileText,
-  File,
-  Trash,
-  X,
-} from '@phosphor-icons/react';
+import { CheckCircle, X } from '@phosphor-icons/react';
 
 export function CompleteFitoutModal({ show, onHide, onConfirm }) {
-  const [notes, setNotes] = useState(
-    'All water pipe installations and unit renovation works have been 100% completed and verified on site.'
-  );
-  const [uploadedFiles, setUploadedFiles] = useState([
-    {
-      id: 'file-1',
-      name: 'unit_renovation_completion_photo_1.jpg',
-      size: '2.4 MB',
-      type: 'image/jpeg',
-    },
-    {
-      id: 'file-2',
-      name: 'pipe_installation_completion_photo_2.jpg',
-      size: '1.8 MB',
-      type: 'image/jpeg',
-    },
-  ]);
-  const [isDragging, setIsDragging] = useState(false);
+  const [notes, setNotes] = useState('');
+  const [uploadedFiles, setUploadedFiles] = useState([]);
   const fileInputRef = useRef(null);
 
-  const formatFileSize = (bytes) => {
-    if (!bytes || bytes === 0) return '0 B';
-    const k = 1024;
-    const sizes = ['B', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
-  };
-
-  const handleFilesAdded = (filesList) => {
-    const filesArray = Array.from(filesList || []);
-    if (filesArray.length === 0) return;
-
-    const newEntries = filesArray.map((f, idx) => ({
-      id: `${Date.now()}-${idx}`,
-      name: f.name,
-      size: formatFileSize(f.size),
-      type: f.type,
-      rawFile: f,
-    }));
-
-    setUploadedFiles((prev) => [...prev, ...newEntries]);
-  };
+  // Reset fields on modal open so user can experience the validation directly
+  useEffect(() => {
+    if (show) {
+      setNotes('');
+      setUploadedFiles([]);
+    }
+  }, [show]);
 
   const handleFileChange = (e) => {
-    handleFilesAdded(e.target.files);
-    e.target.value = ''; // reset so same file can be selected again
-  };
-
-  const handleDragOver = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(true);
-  };
-
-  const handleDragLeave = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(false);
-  };
-
-  const handleDrop = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(false);
-    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      handleFilesAdded(e.dataTransfer.files);
-      e.dataTransfer.clearData();
+    const files = Array.from(e.target.files || []);
+    if (files.length > 0) {
+      setUploadedFiles(files);
     }
   };
 
-  const handleRemoveFile = (id) => {
-    setUploadedFiles((prev) => prev.filter((f) => f.id !== id));
+  const handleClearFiles = (e) => {
+    e.stopPropagation();
+    setUploadedFiles([]);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   };
 
+  // Validation: Button disabled until BOTH file uploaded AND notes filled!
   const isFormValid = useMemo(() => {
-    return notes.trim().length > 0;
-  }, [notes]);
+    return notes.trim().length > 0 && uploadedFiles.length > 0;
+  }, [notes, uploadedFiles]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -101,10 +47,21 @@ export function CompleteFitoutModal({ show, onHide, onConfirm }) {
     onHide();
   };
 
+  // Display text for the custom file input
+  const fileDisplayText = useMemo(() => {
+    if (uploadedFiles.length === 0) return 'No file chosen';
+    if (uploadedFiles.length === 1) return uploadedFiles[0].name;
+    return `${uploadedFiles.length} files chosen (${uploadedFiles.map((f) => f.name).join(', ')})`;
+  }, [uploadedFiles]);
+
   return (
     <Modal show={show} onHide={onHide} centered size="lg">
-      {/* Modal Header: Exact 16px 20px padding */}
-      <Modal.Header closeButton className="border-bottom" style={{ backgroundColor: '#f8fafc', padding: '16px 20px' }}>
+      {/* Modal Header */}
+      <Modal.Header
+        closeButton
+        className="border-bottom"
+        style={{ backgroundColor: '#f8fafc', padding: '16px 20px' }}
+      >
         <div>
           <Modal.Title className="fw-bold fs-6 text-dark mb-1" style={{ lineHeight: '1.25' }}>
             Confirm Fitout Completion
@@ -117,131 +74,91 @@ export function CompleteFitoutModal({ show, onHide, onConfirm }) {
 
       <Form onSubmit={handleSubmit}>
         <Modal.Body className="bg-white" style={{ padding: '24px' }}>
-          {/* Info Banner */}
+          {/* Info Alert */}
           <div
             className="rounded-3 border mb-4 p-3 d-flex align-items-center gap-2.5"
             style={{ backgroundColor: '#f0fdf4', borderColor: '#bbf7d0', color: '#15803d' }}
           >
             <CheckCircle size={20} weight="fill" className="flex-shrink-0" />
             <span style={{ fontSize: '0.82rem', lineHeight: '1.45' }}>
-              Confirming completion of fitout works will advance the permit status to <strong>FINAL INSPECTION</strong>.
+              Confirming completion of fitout works will advance the permit status to{' '}
+              <strong>FINAL INSPECTION</strong>.
             </span>
           </div>
 
-          {/* 1. Modern File Upload Dropzone */}
+          {/* 1. Custom File Upload Bar matching design */}
           <div className="mb-4">
-            <Form.Label className="fw-bold text-dark d-flex align-items-center justify-content-between mb-1" style={{ fontSize: '0.82rem' }}>
-              <span>
-                Upload Documentation Files <span className="text-muted fw-normal">({uploadedFiles.length} {uploadedFiles.length === 1 ? 'file' : 'files'} attached)</span>
-              </span>
+            <Form.Label className="fw-bold text-dark mb-1.5" style={{ fontSize: '0.82rem' }}>
+              Upload Documentation File <span className="text-danger">*</span>
             </Form.Label>
-            <div className="text-muted small mb-2.5" style={{ fontSize: '0.74rem' }}>
-              Upload completion photos, inspection forms, or technical handover documents.
-            </div>
 
-            {/* Hidden File Input */}
+            {/* Hidden native input */}
             <input
               type="file"
               ref={fileInputRef}
               onChange={handleFileChange}
               multiple
-              accept="image/*,.pdf,.doc,.docx"
+              accept=".pdf,.png,.jpg,.jpeg"
               style={{ display: 'none' }}
             />
 
-            {/* Clean Drag & Drop Area */}
+            {/* File Input Bar */}
             <div
-              className="rounded-3 border border-2 text-center p-4 transition-all cursor-pointer"
+              className="d-flex align-items-center border rounded-2 overflow-hidden cursor-pointer"
               style={{
-                borderStyle: 'dashed',
-                borderColor: isDragging ? '#27b29b' : '#cbd5e1',
-                backgroundColor: isDragging ? '#f0fdf9' : '#f8fafc',
+                borderColor: '#cbd5e1',
+                backgroundColor: '#ffffff',
+                height: '42px',
                 cursor: 'pointer',
               }}
               onClick={() => fileInputRef.current?.click()}
-              onDragOver={handleDragOver}
-              onDragLeave={handleDragLeave}
-              onDrop={handleDrop}
             >
-              <div className="d-flex justify-content-center mb-2">
-                <div
-                  className="rounded-circle d-flex align-items-center justify-content-center"
-                  style={{ width: '48px', height: '48px', backgroundColor: '#e6f8f5', color: '#27b29b' }}
+              {/* Dark slate 'Choose File' button */}
+              <div
+                className="d-flex align-items-center justify-content-center text-white fw-semibold px-3 h-100 flex-shrink-0"
+                style={{
+                  backgroundColor: '#2c3b4d',
+                  fontSize: '0.84rem',
+                  letterSpacing: '0.01em',
+                  userSelect: 'none',
+                }}
+              >
+                Choose File
+              </div>
+
+              {/* File name / 'No file chosen' text */}
+              <div
+                className="px-3 text-truncate flex-grow-1"
+                style={{
+                  fontSize: '0.84rem',
+                  color: uploadedFiles.length > 0 ? '#0f172a' : '#64748b',
+                  fontWeight: uploadedFiles.length > 0 ? 500 : 400,
+                }}
+              >
+                {fileDisplayText}
+              </div>
+
+              {/* Clear button if files selected */}
+              {uploadedFiles.length > 0 && (
+                <button
+                  type="button"
+                  className="btn btn-sm btn-link text-muted p-2 me-1 d-flex align-items-center justify-content-center"
+                  onClick={handleClearFiles}
+                  title="Remove selected file"
+                  style={{ textDecoration: 'none' }}
                 >
-                  <CloudArrowUp size={28} weight="bold" />
-                </div>
-              </div>
-              <div className="fw-bold text-dark" style={{ fontSize: '0.88rem', marginBottom: '2px' }}>
-                <span style={{ color: '#27b29b', textDecoration: 'underline' }}>Click to upload</span> or drag and drop
-              </div>
-              <div className="text-muted small" style={{ fontSize: '0.74rem' }}>
-                Supported formats: PNG, JPG, JPEG, PDF, DOCX (Max 10MB per file)
-              </div>
+                  <X size={16} weight="bold" />
+                </button>
+              )}
             </div>
 
-            {/* Uploaded Files List */}
-            {uploadedFiles.length > 0 && (
-              <div className="d-flex flex-column gap-2 mt-3">
-                {uploadedFiles.map((file) => {
-                  const isPdf = file.name.toLowerCase().endsWith('.pdf');
-                  const isImage =
-                    file.name.toLowerCase().endsWith('.jpg') ||
-                    file.name.toLowerCase().endsWith('.jpeg') ||
-                    file.name.toLowerCase().endsWith('.png');
-
-                  return (
-                    <div
-                      key={file.id}
-                      className="p-2.5 px-3 rounded-2 border d-flex align-items-center justify-content-between bg-white shadow-xs"
-                      style={{ borderColor: '#e2e8f0' }}
-                    >
-                      <div className="d-flex align-items-center gap-2.5 overflow-hidden">
-                        <div
-                          className="rounded-2 p-2 d-flex align-items-center justify-content-center flex-shrink-0"
-                          style={{
-                            backgroundColor: isPdf ? '#fee2e2' : isImage ? '#e6f8f5' : '#f1f5f9',
-                            color: isPdf ? '#dc2626' : isImage ? '#27b29b' : '#64748b',
-                          }}
-                        >
-                          {isPdf ? (
-                            <FileText size={18} weight="bold" />
-                          ) : isImage ? (
-                            <FileImage size={18} weight="bold" />
-                          ) : (
-                            <File size={18} weight="bold" />
-                          )}
-                        </div>
-                        <div className="overflow-hidden">
-                          <div
-                            className="fw-semibold text-dark text-truncate"
-                            style={{ fontSize: '0.82rem' }}
-                            title={file.name}
-                          >
-                            {file.name}
-                          </div>
-                          <div className="text-muted" style={{ fontSize: '0.72rem' }}>
-                            {file.size} &bull; <span className="text-success fw-medium">Ready</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Remove Button */}
-                      <button
-                        type="button"
-                        className="btn btn-sm btn-link p-1 text-muted hover-danger flex-shrink-0 ms-2"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleRemoveFile(file.id);
-                        }}
-                        title="Remove file"
-                      >
-                        <Trash size={16} />
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
+            {/* Subtext info */}
+            <div
+              className="text-secondary small mt-1.5"
+              style={{ fontSize: '0.74rem', color: '#64748b' }}
+            >
+              Supported formats: PDF, PNG, JPG (Max. 5MB)
+            </div>
           </div>
 
           {/* 2. Tenant Relation / Engineering Notes */}
@@ -294,19 +211,26 @@ export function CompleteFitoutModal({ show, onHide, onConfirm }) {
             Cancel
           </button>
 
-          {/* Confirm Button */}
+          {/* Confirm Button (Disabled until BOTH file uploaded AND notes filled) */}
           <button
             type="submit"
             disabled={!isFormValid}
             className="btn fw-bold d-flex align-items-center gap-2 px-4 py-2 text-white"
             style={{
-              backgroundColor: isFormValid ? '#16a34a' : '#94a3b8',
-              borderColor: isFormValid ? '#16a34a' : '#94a3b8',
+              backgroundColor: isFormValid ? '#16a34a' : '#cbd5e1',
+              borderColor: isFormValid ? '#16a34a' : '#cbd5e1',
+              color: isFormValid ? '#ffffff' : '#94a3b8',
               borderRadius: '0.45rem',
               fontSize: '0.84rem',
               boxShadow: isFormValid ? '0 2px 4px rgba(22, 163, 74, 0.2)' : 'none',
               cursor: isFormValid ? 'pointer' : 'not-allowed',
+              transition: 'all 0.2s ease',
             }}
+            title={
+              !isFormValid
+                ? 'Please upload a documentation file and fill in notes to enable completion'
+                : 'Confirm & Proceed to Final Inspection'
+            }
           >
             <CheckCircle size={18} weight="bold" />
             <span>Confirm Complete</span>
