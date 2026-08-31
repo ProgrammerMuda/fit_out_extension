@@ -122,12 +122,12 @@ export function RequestInformationCard({ permit }) {
         {/* Field: Request Photos (Documentation Photos) */}
         <div>
           <div
-            className="fw-bold text-uppercase text-dark d-flex align-items-center gap-1.5"
+            className="fw-bold text-uppercase text-dark d-flex align-items-center gap-2.5"
             style={{ fontSize: '0.74rem', letterSpacing: '0.04em', marginBottom: '12px' }}
           >
-            <ImageIcon size={16} weight="bold" />
+            <ImageIcon size={17} weight="bold" />
             <span>
-              REQUEST PHOTOS {permit.photos && permit.photos.length > 0 ? `(${permit.photos.length} PHOTOS)` : ''}
+              REQUEST PHOTOS {permit.photos && permit.photos.length > 0 ? `(${permit.photos.length} ${permit.photos.length === 1 ? 'PHOTO' : 'PHOTOS'})` : ''}
             </span>
           </div>
 

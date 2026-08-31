@@ -185,11 +185,13 @@ export function ExtensionHistoryCard({ extensionLogs = [] }) {
                     {item.photos && item.photos.length > 0 && (
                       <div style={{ marginBottom: '24px' }}>
                         <div
-                          className="fw-bold text-uppercase text-dark d-flex align-items-center gap-1.5"
+                          className="fw-bold text-uppercase text-dark d-flex align-items-center gap-2.5"
                           style={{ fontSize: '0.74rem', letterSpacing: '0.04em', marginBottom: '12px' }}
                         >
-                          <ImageIcon size={16} weight="bold" />
-                          <span>REQUEST PHOTOS ({item.photos.length} PHOTOS)</span>
+                          <ImageIcon size={17} weight="bold" />
+                          <span>
+                            REQUEST PHOTOS ({item.photos.length} {item.photos.length === 1 ? 'PHOTO' : 'PHOTOS'})
+                          </span>
                         </div>
                         <div className="d-flex align-items-center gap-3 flex-wrap">
                           {item.photos.map((src, pIdx) => (
