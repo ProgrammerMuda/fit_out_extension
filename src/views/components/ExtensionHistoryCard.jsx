@@ -352,7 +352,7 @@ export function ExtensionHistoryCard({ extensionLogs = [], permit = null }) {
                           >
                             <div>
                               <div className="fw-bold text-dark mb-1" style={{ fontSize: '0.82rem' }}>
-                                Fit Out Extension Fee - Supervisi Teknis Harian
+                                Fit Out Extension Fee - Daily Technical Supervision
                               </div>
                               <div className="text-muted" style={{ fontSize: '0.74rem' }}>
                                 Fee for extended period (+{item.requestedDays || 3} Days) up to {item.targetDate}{' '}
@@ -446,7 +446,7 @@ export function ExtensionHistoryCard({ extensionLogs = [], permit = null }) {
             <div className="p-3 rounded-3 border bg-light mb-3" style={{ borderColor: '#e2e8f0' }}>
               <div className="d-flex justify-content-between align-items-center">
                 <div>
-                  <div className="text-muted small">Status Tagihan</div>
+                  <div className="text-muted small">Invoice Status</div>
                   <div
                     className="fw-bold fs-6"
                     style={{ color: activeInvoiceItem.isPaid ? '#16a34a' : '#ea580c' }}
@@ -455,7 +455,7 @@ export function ExtensionHistoryCard({ extensionLogs = [], permit = null }) {
                   </div>
                 </div>
                 <div className="text-end">
-                  <div className="text-muted small">Total Tagihan</div>
+                  <div className="text-muted small">Total Amount</div>
                   <div className="fw-bold text-dark fs-5">
                     {activeInvoiceItem.totalCharge || 'Rp 450.000,00'}
                   </div>
@@ -479,7 +479,7 @@ export function ExtensionHistoryCard({ extensionLogs = [], permit = null }) {
                 <tr>
                   <td>
                     <div className="fw-bold" style={{ fontSize: '0.82rem' }}>
-                      Fit Out Extension Fee - Supervisi Teknis Harian
+                      Fit Out Extension Fee - Daily Technical Supervision
                     </div>
                     <div className="text-muted small" style={{ fontSize: '0.72rem' }}>
                       Fee for extended period up to {activeInvoiceItem.targetDate}

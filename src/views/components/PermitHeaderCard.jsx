@@ -98,7 +98,7 @@ export function PermitHeaderCard({
                 transition: 'all 0.2s ease',
               }}
               onClick={onOpenExtension}
-              title="Tinjau permohonan perpanjangan jadwal dari Engineering"
+              title="Review engineering extension request"
             >
               <CalendarPlus size={18} weight="bold" />
               <span>Review Extension</span>
@@ -115,7 +115,7 @@ export function PermitHeaderCard({
                 opacity: 0.85,
               }}
               onClick={onComplete}
-              title="Klik untuk menyelesaikan pekerjaan"
+              title="Click to complete fitout work"
             >
               <CheckCircle size={18} weight="bold" />
               <span>Complete</span>
@@ -135,7 +135,7 @@ export function PermitHeaderCard({
                 transition: 'all 0.2s ease',
               }}
               onClick={onComplete}
-              title="Klik untuk menyelesaikan pekerjaan dan lanjut ke Final Inspection"
+              title="Click to complete fitout work"
             >
               <CheckCircle size={18} weight="bold" />
               <span>Complete</span>
@@ -154,7 +154,7 @@ export function PermitHeaderCard({
                 transition: 'all 0.2s ease',
               }}
               onClick={onOpenExtension}
-              title="Klik untuk memperpanjang tanggal selesai fitout (Gratis / Berbayar)"
+              title="Click to request an extension for fitout completion"
             >
               <CalendarPlus size={18} weight="bold" />
               <span>Extension</span>

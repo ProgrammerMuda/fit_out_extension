@@ -126,28 +126,24 @@ export function PermitDetailView({
               className={`btn btn-sm py-1 px-2.5 rounded-pill fw-semibold transition-all ${
                 activeScenario === 'ENGINEERING_REQUEST'
                   ? 'btn-warning text-dark'
-                  : 'btn-light text-secondary'
+                  : 'bg-white text-secondary border'
               }`}
               style={{ fontSize: '0.72rem' }}
               onClick={() => onSetScenario('ENGINEERING_REQUEST')}
-              title="Skenario 1: Ada pengajuan perpanjangan waktu dari Engineering Lead"
+              title="Scenario 1: Engineering submits extension request (reviewed by TR)"
             >
-              1. Engineering Request
+              1. Eng. Request (Default)
             </button>
             <button
               type="button"
-              className={`btn btn-sm py-1 px-2.5 rounded-pill fw-semibold transition-all ${
+              className={`btn btn-sm py-1 px-2.5 rounded-pill fw-bold transition-all shadow-xs ${
                 activeScenario === 'TR_DIRECT'
-                  ? 'btn-primary text-white'
-                  : 'btn-light text-secondary'
+                  ? 'bg-dark text-white'
+                  : 'bg-white text-secondary border'
               }`}
-              style={{
-                fontSize: '0.72rem',
-                backgroundColor: activeScenario === 'TR_DIRECT' ? '#27b29b' : undefined,
-                borderColor: activeScenario === 'TR_DIRECT' ? '#27b29b' : undefined,
-              }}
+              style={{ fontSize: '0.72rem' }}
               onClick={() => onSetScenario('TR_DIRECT')}
-              title="Skenario 2: Tenant Relation langsung menambah extension secara mandiri"
+              title="Scenario 2: Tenant Relation issues direct extension"
             >
               2. TR Direct Extension
             </button>
@@ -162,7 +158,7 @@ export function PermitDetailView({
                   borderColor: '#ea580c',
                 }}
                 onClick={onSimulateEngineeringRequest}
-                title="Klik untuk mensimulasikan permohonan perpanjangan baru dari Engineering agar bisa di-reject lagi"
+                title="Click to simulate new extension request from Engineering"
               >
                 + Request Extension (Eng)
               </button>

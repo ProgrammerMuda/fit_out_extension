@@ -173,7 +173,7 @@ export function CreateProjectModalView({ show, onHide, onAddProject }) {
                   as="textarea"
                   rows={3}
                   name="description"
-                  placeholder="Rincian scope pekerjaan fitout, material khusus, spesifikasi, dsb."
+                  placeholder="Details of fitout work scope, special materials, specifications, etc."
                   value={formData.description}
                   onChange={handleChange}
                 />
@@ -183,11 +183,11 @@ export function CreateProjectModalView({ show, onHide, onAddProject }) {
         </Modal.Body>
         <Modal.Footer className="border-0 pt-0">
           <Button variant="light" onClick={onHide} className="fw-semibold">
-            Batal
+            Cancel
           </Button>
           <Button variant="primary" type="submit" className="d-flex align-items-center gap-1 fw-semibold px-4">
             <FloppyDisk size={18} weight="bold" />
-            Simpan Proyek
+            Save Project
           </Button>
         </Modal.Footer>
       </Form>

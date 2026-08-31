@@ -3,10 +3,12 @@ import { Modal, Form } from 'react-bootstrap';
 import { CheckCircle, UploadSimple, Camera, Trash, Image as ImageIcon } from '@phosphor-icons/react';
 
 export function CompleteFitoutModal({ show, onHide, onConfirm }) {
-  const [notes, setNotes] = useState('Pekerjaan instalasi pipa air dan perbaikan renovasi unit telah selesai 100% dan telah diverifikasi di lapangan.');
+  const [notes, setNotes] = useState(
+    'All water pipe installations and unit renovation works have been 100% completed and verified on site.'
+  );
   const [photos, setPhotos] = useState([
-    { id: '1', name: 'hasil_renovasi_unit_1.jpg', url: '/images/pipe_1.jpg' },
-    { id: '2', name: 'hasil_instalasi_pipa_2.jpg', url: '/images/pipe_2.jpg' },
+    { id: '1', name: 'unit_renovation_completion_1.jpg', url: '/images/pipe_1.jpg' },
+    { id: '2', name: 'pipe_installation_completion_2.jpg', url: '/images/pipe_2.jpg' },
   ]);
   const fileInputRef = useRef(null);
 
@@ -51,7 +53,7 @@ export function CompleteFitoutModal({ show, onHide, onConfirm }) {
             Confirm Fitout Completion
           </Modal.Title>
           <div className="text-muted small" style={{ fontSize: '0.78rem', lineHeight: '1.4' }}>
-            Konfirmasi penyelesaian pekerjaan renovasi unit dan upload dokumentasi foto.
+            Confirm completion of unit renovation works and attach photographic documentation.
           </div>
         </div>
       </Modal.Header>
@@ -65,7 +67,7 @@ export function CompleteFitoutModal({ show, onHide, onConfirm }) {
           >
             <CheckCircle size={20} weight="fill" className="flex-shrink-0" />
             <span style={{ fontSize: '0.82rem', lineHeight: '1.45' }}>
-              Menyelesaikan pekerjaan fitout akan memajukan status permohonan ke tahap <strong>FINAL INSPECTION</strong>.
+              Confirming completion of fitout works will advance the permit status to <strong>FINAL INSPECTION</strong>.
             </span>
           </div>
 
@@ -73,7 +75,7 @@ export function CompleteFitoutModal({ show, onHide, onConfirm }) {
           <div className="mb-4">
             <Form.Label className="fw-bold text-dark d-flex align-items-center justify-content-between mb-1" style={{ fontSize: '0.82rem' }}>
               <span>
-                Upload Foto Hasil Pekerjaan <span className="text-muted fw-normal">({photos.length} Foto)</span>
+                Completion Evidence Photos <span className="text-muted fw-normal">({photos.length} {photos.length === 1 ? 'Photo' : 'Photos'})</span>
               </span>
               <button
                 type="button"
@@ -82,11 +84,11 @@ export function CompleteFitoutModal({ show, onHide, onConfirm }) {
                 onClick={() => fileInputRef.current?.click()}
               >
                 <UploadSimple size={15} weight="bold" />
-                <span>+ Upload Foto Baru</span>
+                <span>+ Upload New Photo</span>
               </button>
             </Form.Label>
             <div className="text-muted small mb-2.5" style={{ fontSize: '0.74rem' }}>
-              Lampirkan bukti foto dokumentasi bahwa pekerjaan di unit telah selesai dikerjakan.
+              Attach photographic documentation verifying that renovation works in the unit have been completed.
             </div>
 
             <input
@@ -117,7 +119,7 @@ export function CompleteFitoutModal({ show, onHide, onConfirm }) {
                     className="position-absolute top-0 end-0 bg-dark bg-opacity-75 text-white border-0 p-1 d-flex align-items-center justify-content-center"
                     style={{ borderBottomLeftRadius: '6px', width: '22px', height: '22px' }}
                     onClick={() => handleRemovePhoto(item.id)}
-                    title="Hapus foto"
+                    title="Remove photo"
                   >
                     <Trash size={12} weight="bold" />
                   </button>
@@ -136,11 +138,11 @@ export function CompleteFitoutModal({ show, onHide, onConfirm }) {
                   cursor: 'pointer',
                 }}
                 onClick={() => fileInputRef.current?.click()}
-                title="Klik untuk memilih foto dari komputer"
+                title="Click to select photos from device"
               >
                 <Camera size={22} weight="bold" />
                 <span className="fw-semibold mt-1" style={{ fontSize: '0.7rem' }}>
-                  Tambah Foto
+                  Add Photo
                 </span>
               </div>
             </div>
@@ -149,17 +151,17 @@ export function CompleteFitoutModal({ show, onHide, onConfirm }) {
           {/* 2. Tenant Relation / Engineering Notes */}
           <div className="mb-2">
             <Form.Label className="fw-bold text-dark mb-1" style={{ fontSize: '0.82rem' }}>
-              Catatan Penyelesaian Pekerjaan (Notes) <span className="text-danger">*</span>
+              Completion Evaluation Notes <span className="text-danger">*</span>
             </Form.Label>
             <div className="text-muted small mb-2" style={{ fontSize: '0.74rem' }}>
-              Tuliskan ringkasan evaluasi verifikasi lapangan sebelum melanjutkan ke Final Inspection.
+              Provide a verification summary and on-site evaluation before advancing to Final Inspection.
             </div>
             <Form.Control
               as="textarea"
               rows={3}
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="Tulis catatan evaluasi penyelesaian..."
+              placeholder="Enter completion notes and evaluation details..."
               style={{
                 fontSize: '0.86rem',
                 color: '#0f172a',
@@ -193,7 +195,7 @@ export function CompleteFitoutModal({ show, onHide, onConfirm }) {
             }}
             onClick={onHide}
           >
-            Batal
+            Cancel
           </button>
 
           {/* Confirm Button */}

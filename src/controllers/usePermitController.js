@@ -13,7 +13,7 @@ export function usePermitController() {
     requestedEndDate: '13 Aug 2026',
     requestedDays: 3,
     technicalReason:
-      'Ditemukan kendala kebocoran pada pipa induk sambungan PVC saat uji tekan hidrolik di area pantry. Diperlukan waktu pembongkaran sambungan dan masa pengeringan (curing) lem sealant bertekanan selama minimal 3 hari kerja sebelum inspeksi kelayakan ulang.',
+      'Leakage detected on main PVC pipe connection during hydraulic pressure test in pantry area. Requires joint dismantling and pressurized sealant adhesive curing period for at least 3 working days prior to re-inspection feasibility.',
     photos: ['/images/pipe_1.jpg', '/images/pipe_2.jpg', '/images/pipe_3.jpg'],
     status: 'PENDING_TR_REVIEW',
   });
@@ -85,7 +85,7 @@ export function usePermitController() {
       targetDate: '13 Aug 2026',
       status: 'PENDING_TR_REVIEW',
       requestReason:
-        'Ditemukan kendala kebocoran pipa induk sambungan PVC saat uji tekan hidrolik di area pantry. Diperlukan waktu curing sealant lem 3 hari kerja sebelum uji kelayakan ulang.',
+        'Leakage detected on main PVC pipe connection during hydraulic pressure test in pantry area. Requires joint dismantling and pressurized sealant adhesive curing period for at least 3 working days prior to re-inspection feasibility.',
       photos: ['/images/pipe_1.jpg', '/images/pipe_2.jpg', '/images/pipe_3.jpg'],
     },
     {
@@ -97,12 +97,12 @@ export function usePermitController() {
       targetDate: '12 Aug 2026',
       status: 'REJECTED',
       requestReason:
-        'Pemasangan keramik dinding kamar mandi tertunda akibat kendala pengiriman semen instan dari supplier.',
+        'Installation of bathroom wall tiles delayed due to supply chain shipment constraints of tile adhesive from manufacturer.',
       photos: ['/images/pipe_2.jpg'],
       decidedBy: 'Tenant Relation Lead - Management',
       decidedAt: '08/08/2026, 03:40 PM',
       decisionReason:
-        'Permohonan perpanjangan +2 hari tidak disetujui karena jadwal pengerjaan unit masih dalam batas toleransi awal. Kontraktor diminta mengoptimalkan sisa waktu pengerjaan dan menambah tenaga kerja.',
+        'The requested +2 days extension is not approved as unit renovation schedule remains within initial grace tolerance. Contractor is requested to optimize remaining work hours and augment manpower.',
     },
   ]);
 
@@ -312,7 +312,9 @@ export function usePermitController() {
   // Reject Extension Request Action
   const handleRejectExtension = ({ rejectReason }) => {
     const nowStr = '10/08/2026, 03:55 PM';
-    const cleanReason = rejectReason?.trim() || 'Permohonan perpanjangan jadwal tidak disetujui karena melebihi batas toleransi pengerjaan.';
+    const cleanReason =
+      rejectReason?.trim() ||
+      'Schedule extension request not approved as renovation duration exceeds permitted tolerance limit.';
 
     if (engineeringRequest) {
       setEngineeringRequest((prev) => (prev ? { ...prev, status: 'REJECTED', rejectReason: cleanReason } : null));
@@ -559,7 +561,7 @@ export function usePermitController() {
         targetDate: '14 Aug 2026',
         status: 'PENDING_TR_REVIEW',
         requestReason:
-          'Ditemukan kendala teknis lanjutan pada instalasi kelistrikan jalur panel utama. Membutuhkan waktu perbaikan kabel dan tes beban selama 4 hari kerja sebelum inspeksi serah terima.',
+          'Secondary technical issue detected on main electrical distribution board wiring. Requires cable rectification and load testing over 4 working days prior to handover inspection.',
         photos: ['/images/pipe_1.jpg', '/images/pipe_2.jpg', '/images/pipe_3.jpg'],
       },
       ...prev.filter((item) => item.status !== 'PENDING_TR_REVIEW'),
@@ -569,7 +571,7 @@ export function usePermitController() {
       show: true,
       type: 'info',
       title: 'New Engineering Request Active',
-      message: 'Permohonan perpanjangan baru dari Engineering siap untuk di-review dan di-reject/approve oleh TR.',
+      message: 'New extension request from Engineering is ready for Tenant Relation review.',
     });
   };
 

@@ -39,7 +39,7 @@ export function ScheduleInspectionModal({ show, onHide, currentSchedule, onSave 
           <Row className="g-3">
             <Col md={6}>
               <Form.Group controlId="inspectionDate">
-                <Form.Label className="small fw-semibold text-secondary">Tanggal Inspeksi</Form.Label>
+                <Form.Label className="small fw-semibold text-secondary">Inspection Date</Form.Label>
                 <Form.Control
                   type="date"
                   name="inspectionDate"
@@ -51,7 +51,7 @@ export function ScheduleInspectionModal({ show, onHide, currentSchedule, onSave 
             </Col>
             <Col md={6}>
               <Form.Group controlId="inspectionTime">
-                <Form.Label className="small fw-semibold text-secondary">Waktu / Jam</Form.Label>
+                <Form.Label className="small fw-semibold text-secondary">Inspection Time</Form.Label>
                 <Form.Control
                   type="time"
                   name="inspectionTime"
@@ -63,7 +63,7 @@ export function ScheduleInspectionModal({ show, onHide, currentSchedule, onSave 
             </Col>
             <Col md={12}>
               <Form.Group controlId="inspectorName">
-                <Form.Label className="small fw-semibold text-secondary">Petugas Engineering (PIC)</Form.Label>
+                <Form.Label className="small fw-semibold text-secondary">Engineering Officer (PIC)</Form.Label>
                 <Form.Control
                   type="text"
                   name="inspectorName"
@@ -75,14 +75,14 @@ export function ScheduleInspectionModal({ show, onHide, currentSchedule, onSave 
             </Col>
             <Col md={12}>
               <Form.Group controlId="notes">
-                <Form.Label className="small fw-semibold text-secondary">Catatan / Instruksi</Form.Label>
+                <Form.Label className="small fw-semibold text-secondary">Notes / Instructions</Form.Label>
                 <Form.Control
                   as="textarea"
                   rows={3}
                   name="notes"
                   value={formData.notes}
                   onChange={handleChange}
-                  placeholder="Catatan persiapan unit sebelum inspeksi..."
+                  placeholder="Unit preparation notes prior to inspection..."
                 />
               </Form.Group>
             </Col>
@@ -90,11 +90,11 @@ export function ScheduleInspectionModal({ show, onHide, currentSchedule, onSave 
         </Modal.Body>
         <Modal.Footer className="border-0 pt-0">
           <Button variant="light" onClick={onHide} className="fw-semibold small">
-            Batal
+            Cancel
           </Button>
           <Button variant="warning" type="submit" className="btn-orange-action small">
             <FloppyDisk size={16} weight="bold" />
-            Konfirmasi Jadwal
+            Confirm Schedule
           </Button>
         </Modal.Footer>
       </Form>

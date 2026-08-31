@@ -112,16 +112,16 @@ export function EarlyInspectionCard({
               <strong>{selectedInspection?.code}</strong>
             </div>
             <div className="d-flex justify-content-between align-items-center mb-2">
-              <span className="text-muted small">Inspektur & Waktu:</span>
+              <span className="text-muted small">Inspector & Time:</span>
               <span>{selectedInspection?.inspector} ({selectedInspection?.date})</span>
             </div>
             <div className="d-flex justify-content-between align-items-center">
-              <span className="text-muted small">Status Temuan:</span>
+              <span className="text-muted small">Inspection Result:</span>
               <span className="badge bg-danger">{selectedInspection?.result}</span>
             </div>
           </div>
 
-          <h6 className="fw-bold text-dark mb-1" style={{ fontSize: '0.85rem' }}>Catatan Temuan Lapangan:</h6>
+          <h6 className="fw-bold text-dark mb-1" style={{ fontSize: '0.85rem' }}>Field Findings & Notes:</h6>
           <p className="text-muted small mb-0 p-3 border rounded-2" style={{ backgroundColor: '#fff' }}>
             {selectedInspection?.findings}
           </p>
