@@ -5,7 +5,6 @@ import { ApplicationProcessStepper } from '../components/ApplicationProcessStepp
 import { ActionRequiredAlert } from '../components/ActionRequiredAlert';
 import { RequestInformationCard } from '../components/RequestInformationCard';
 import { LocationInformationCard } from '../components/LocationInformationCard';
-import { ExtensionInformationCard } from '../components/ExtensionInformationCard';
 import { FitoutBillInformationCard } from '../components/FitoutBillInformationCard';
 import { VendorInformationCard } from '../components/VendorInformationCard';
 import { ManpowerDetailCard } from '../components/ManpowerDetailCard';
@@ -253,15 +252,8 @@ export function PermitDetailView({
             tower={permit.tower}
             floor={permit.floor}
           />
-          {/* Dedicated Extension History Card (Displays requests, decisions, rejections & notes) */}
-          <ExtensionHistoryCard extensionLogs={extensionLogs} />
-          {/* Unified Extension Information Card (Schedule, Scheme, Decision Notes, and Bill if Chargeable) */}
-          {(extensionInfo || permit.isExtended) && (
-            <ExtensionInformationCard
-              permit={permit}
-              extensionData={extensionInfo || undefined}
-            />
-          )}
+          {/* Unified Extension History Card (Displays requests, decisions, rejections, notes & bills) */}
+          <ExtensionHistoryCard extensionLogs={extensionLogs} permit={permit} />
           {/* Initial Fitout Bill (Deposit & Supervisi - PAID) */}
           <FitoutBillInformationCard
             permitNumber={permit.permitNumber}

@@ -228,28 +228,67 @@ export function usePermitController() {
       setExtensionBill(null);
     }
 
-    // Update Dedicated Extension History Logs (Approved Entry)
+    // Update Dedicated Extension History Logs (Approved Entry or New Request)
     setExtensionLogs((prev) => {
       const existingPending = prev.find((item) => item.status === 'PENDING_TR_REVIEW');
-      const newEntry = {
-        id: `EXT-LOG-${Date.now().toString().slice(-3)}`,
-        title: existingPending ? existingPending.title : 'Direct Extension Decision',
-        requestedBy: hasEngReq ? 'Budi Santoso (Engineering Lead 01)' : 'Tenant Relation (Direct)',
-        requestedAt: existingPending ? existingPending.requestedAt : nowStr,
-        requestedDays: additionalDays,
-        targetDate: newEndDateStr,
-        status: extensionType === 'chargeable' ? 'APPROVED_CHARGEABLE' : 'APPROVED_FREE',
-        feeType: extensionType,
-        feeAmount: extensionType === 'chargeable' ? totalCharge : 0,
-        requestReason: existingPending
-          ? existingPending.requestReason
-          : 'Direct schedule extension issued by Tenant Relation for unit completion.',
-        photos: existingPending ? existingPending.photos : [],
-        decidedBy: 'Tenant Relation Lead - Management',
-        decidedAt: nowStr,
-        decisionReason: extensionType === 'free' ? cleanFreeReason : (decisionNotes || 'Supervision fee applied.'),
-      };
-      return [newEntry, ...prev.filter((item) => item.status !== 'PENDING_TR_REVIEW')];
+
+      if (existingPending) {
+        // Approving existing pending request (e.g. Extension Request #2)
+        return prev.map((item) => {
+          if (item.id === existingPending.id) {
+            return {
+              ...item,
+              status: isChargeable ? 'APPROVED_CHARGEABLE' : 'APPROVED_FREE',
+              feeType: extensionType,
+              feeAmount: isChargeable ? totalCharge : 0,
+              totalCharge: formattedCharge,
+              invoiceNumber: isChargeable ? 'PRO/INV/082026/000032' : null,
+              billDate: isChargeable ? '10/08/2026, 03:55 PM' : null,
+              dueDate: isChargeable ? '11/08/2026, 11:59 PM' : null,
+              isPaid: false,
+              decidedBy: 'Tenant Relation Lead - Management',
+              decidedAt: nowStr,
+              decisionReason:
+                extensionType === 'free'
+                  ? cleanFreeReason
+                  : (decisionNotes || 'Supervision fee applied.'),
+              targetDate: newEndDateStr,
+              requestedDays: additionalDays,
+            };
+          }
+          return item;
+        });
+      } else {
+        // TR issues an extension directly (no pending request) -> creates Extension Request #3, #4, etc.!
+        const nextNum = prev.length + 1;
+        const newInvoiceNum = `PRO/INV/082026/00003${nextNum}`;
+        const newEntry = {
+          id: `EXT-LOG-${Date.now().toString().slice(-3)}`,
+          title: `Extension Request #${nextNum}`,
+          requestedBy: 'Tenant Relation (Direct)',
+          requestedAt: nowStr,
+          requestedDays: additionalDays,
+          targetDate: newEndDateStr,
+          status: isChargeable ? 'APPROVED_CHARGEABLE' : 'APPROVED_FREE',
+          feeType: extensionType,
+          feeAmount: isChargeable ? totalCharge : 0,
+          totalCharge: formattedCharge,
+          invoiceNumber: isChargeable ? newInvoiceNum : null,
+          billDate: isChargeable ? nowStr : null,
+          dueDate: isChargeable ? '12/08/2026, 11:59 PM' : null,
+          isPaid: false,
+          requestReason:
+            decisionNotes || 'Direct schedule extension issued by Tenant Relation for unit completion.',
+          photos: [],
+          decidedBy: 'Tenant Relation Lead - Management',
+          decidedAt: nowStr,
+          decisionReason:
+            extensionType === 'free'
+              ? cleanFreeReason
+              : (decisionNotes || 'Supervision fee applied.'),
+        };
+        return [newEntry, ...prev];
+      }
     });
 
     // Show Toast
@@ -365,6 +404,19 @@ export function usePermitController() {
             paidAt: paidTimeStr,
           }
         : null
+    );
+
+    setExtensionLogs((prev) =>
+      prev.map((item) => {
+        if (item.status === 'APPROVED_CHARGEABLE' && !item.isPaid) {
+          return {
+            ...item,
+            isPaid: true,
+            paidAt: paidTimeStr,
+          };
+        }
+        return item;
+      })
     );
 
     setTrackingLogs((prev) => [

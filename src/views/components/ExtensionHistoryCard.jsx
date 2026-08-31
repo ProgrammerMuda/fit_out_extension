@@ -8,11 +8,13 @@ import {
   Calendar,
   Image as ImageIcon,
   MagnifyingGlassPlus,
+  FileText,
 } from '@phosphor-icons/react';
-import { Modal } from 'react-bootstrap';
+import { Modal, Button, Table } from 'react-bootstrap';
 
-export function ExtensionHistoryCard({ extensionLogs = [] }) {
+export function ExtensionHistoryCard({ extensionLogs = [], permit = null }) {
   const [selectedPhoto, setSelectedPhoto] = useState(null);
+  const [activeInvoiceItem, setActiveInvoiceItem] = useState(null);
 
   return (
     <div className="proa-card overflow-hidden mb-4">
@@ -43,7 +45,10 @@ export function ExtensionHistoryCard({ extensionLogs = [] }) {
             {extensionLogs.map((item, index) => {
               const isRejected = item.status === 'REJECTED';
               const isPending = item.status === 'PENDING_TR_REVIEW';
-              const isApproved = item.status === 'APPROVED_FREE' || item.status === 'APPROVED_CHARGEABLE';
+              const isApproved =
+                item.status === 'APPROVED_FREE' || item.status === 'APPROVED_CHARGEABLE';
+              const isChargeable =
+                item.status === 'APPROVED_CHARGEABLE' || item.feeType === 'chargeable';
 
               // Status Badge Config
               let badgeBg = '#f1f5f9';
@@ -61,7 +66,8 @@ export function ExtensionHistoryCard({ extensionLogs = [] }) {
               } else if (isApproved) {
                 badgeBg = '#ecfdf5';
                 badgeColor = '#059669';
-                badgeText = item.status === 'APPROVED_FREE' ? 'APPROVED (FREE)' : 'APPROVED (CHARGEABLE)';
+                badgeText =
+                  item.status === 'APPROVED_FREE' ? 'APPROVED (FREE)' : 'APPROVED (CHARGEABLE)';
               }
 
               return (
@@ -127,7 +133,7 @@ export function ExtensionHistoryCard({ extensionLogs = [] }) {
                         </div>
                       </div>
 
-                      {/* 2. Requested Extension Period */}
+                      {/* 2. Requested Extension Period (Stacked with vertical spacing) */}
                       <div className="col-12 col-md-4">
                         <div
                           className="text-muted fw-semibold text-uppercase"
@@ -146,7 +152,7 @@ export function ExtensionHistoryCard({ extensionLogs = [] }) {
                         </div>
                       </div>
 
-                      {/* 3. Submitted At */}
+                      {/* 3. Submitted At (Dark bold text) */}
                       <div className="col-12 col-md-4">
                         <div
                           className="text-muted fw-semibold text-uppercase"
@@ -185,7 +191,7 @@ export function ExtensionHistoryCard({ extensionLogs = [] }) {
                       </div>
                     )}
 
-                    {/* Attached Photos: Spacious Gallery */}
+                    {/* Attached Photos: Spacious Gallery with Proper Gap */}
                     {item.photos && item.photos.length > 0 && (
                       <div style={{ marginBottom: '24px' }}>
                         <div
@@ -194,7 +200,8 @@ export function ExtensionHistoryCard({ extensionLogs = [] }) {
                         >
                           <ImageIcon size={17} weight="bold" />
                           <span>
-                            REQUEST PHOTOS ({item.photos.length} {item.photos.length === 1 ? 'PHOTO' : 'PHOTOS'})
+                            REQUEST PHOTOS ({item.photos.length}{' '}
+                            {item.photos.length === 1 ? 'PHOTO' : 'PHOTOS'})
                           </span>
                         </div>
                         <div className="d-flex align-items-center gap-3 flex-wrap">
@@ -228,7 +235,7 @@ export function ExtensionHistoryCard({ extensionLogs = [] }) {
                       </div>
                     )}
 
-                    {/* TENANT RELATION REJECTION DECISION BOX: Generous 22px 24px Padding & 16px Separation */}
+                    {/* TENANT RELATION REJECTION DECISION BOX */}
                     {isRejected && (
                       <div
                         className="rounded-3 border"
@@ -292,7 +299,7 @@ export function ExtensionHistoryCard({ extensionLogs = [] }) {
                       </div>
                     )}
 
-                    {/* TENANT RELATION APPROVAL DECISION BOX: Generous 22px 24px Padding & 16px Separation */}
+                    {/* TENANT RELATION APPROVAL DECISION BOX */}
                     {isApproved && (
                       <div
                         className="rounded-3 border"
@@ -314,7 +321,8 @@ export function ExtensionHistoryCard({ extensionLogs = [] }) {
                               className="fw-bold text-success text-uppercase"
                               style={{ fontSize: '0.78rem', letterSpacing: '0.04em' }}
                             >
-                              TENANT RELATION DECISION (APPROVED - {item.status === 'APPROVED_FREE' ? 'FREE OF CHARGE' : 'CHARGEABLE'})
+                              TENANT RELATION DECISION (APPROVED -{' '}
+                              {item.status === 'APPROVED_FREE' ? 'FREE OF CHARGE' : 'CHARGEABLE'})
                             </span>
                           </div>
                           <span className="text-muted small" style={{ fontSize: '0.74rem' }}>
@@ -352,9 +360,107 @@ export function ExtensionHistoryCard({ extensionLogs = [] }) {
                             Approved by: <strong>{item.decidedBy || 'Tenant Relation Lead - Management'}</strong>
                           </span>
                           <span>
-                            Policy: <strong className="text-success">{item.status === 'APPROVED_FREE' ? 'Free Tolerance Exemption' : 'Supervision Chargeable'}</strong>
+                            Policy:{' '}
+                            <strong className="text-success">
+                              {item.status === 'APPROVED_FREE'
+                                ? 'Free Tolerance Exemption'
+                                : 'Supervision Chargeable'}
+                            </strong>
                           </span>
                         </div>
+                      </div>
+                    )}
+
+                    {/* 4. FIT OUT EXTENSION BILL INFORMATION (Integrated for Chargeable Extensions) */}
+                    {isChargeable && (
+                      <div className="pt-3 mt-3 border-top" style={{ borderColor: '#e2e8f0' }}>
+                        {/* Bill Meta Row & Paid / Unpaid Badge */}
+                        <div className="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
+                          <div>
+                            <h6 className="fw-bold text-dark mb-1" style={{ fontSize: '0.95rem' }}>
+                              Fit Out Extension Bill Information
+                            </h6>
+                            <div
+                              className="d-flex flex-wrap align-items-center gap-2 text-secondary small fw-medium mt-1"
+                              style={{ fontSize: '0.74rem' }}
+                            >
+                              <span>
+                                Invoice:{' '}
+                                <strong style={{ color: '#27b29b' }}>
+                                  {item.invoiceNumber || 'PRO/INV/082026/000032'}
+                                </strong>
+                              </span>
+                              <span>&bull;</span>
+                              <span>Issued: {item.billDate || item.decidedAt || '10/08/2026, 03:55 PM'}</span>
+                              <span>&bull;</span>
+                              <span className="text-danger fw-bold">
+                                Due Date: {item.dueDate || '11/08/2026, 11:59 PM'}
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Paid / Unpaid Status Badge */}
+                          <div
+                            className="px-3 py-1 rounded-pill fw-bold"
+                            style={{
+                              backgroundColor: item.isPaid ? '#dcfce7' : '#fff7ed',
+                              color: item.isPaid ? '#16a34a' : '#ea580c',
+                              border: 'none',
+                              fontSize: '0.75rem',
+                              letterSpacing: '0.04em',
+                            }}
+                          >
+                            {item.isPaid ? 'PAID' : 'UNPAID'}
+                          </div>
+                        </div>
+
+                        {/* Bill Breakdown Box */}
+                        <div className="border rounded-2 mb-3 bg-white" style={{ borderColor: '#e2e8f0' }}>
+                          <div
+                            className="p-3 d-flex justify-content-between align-items-start border-bottom"
+                            style={{ borderColor: '#f1f5f9' }}
+                          >
+                            <div>
+                              <div className="fw-bold text-dark mb-1" style={{ fontSize: '0.82rem' }}>
+                                Fit Out Extension Fee - Supervisi Teknis Harian
+                              </div>
+                              <div className="text-muted" style={{ fontSize: '0.74rem' }}>
+                                Fee for extended period (+{item.requestedDays || 3} Days) up to {item.targetDate}{' '}
+                                for Permit #{permit?.permitNumber || 'PRO/FP/082026/000104'}
+                              </div>
+                            </div>
+                            <div className="fw-bold text-dark text-nowrap ms-3" style={{ fontSize: '0.84rem' }}>
+                              {item.totalCharge || 'Rp 450.000,00'}
+                            </div>
+                          </div>
+
+                          {/* Total Row */}
+                          <div
+                            className="p-3 d-flex justify-content-between align-items-center bg-light"
+                            style={{
+                              backgroundColor: '#f8fafc',
+                              borderBottomLeftRadius: '0.45rem',
+                              borderBottomRightRadius: '0.45rem',
+                            }}
+                          >
+                            <span className="fw-semibold text-secondary" style={{ fontSize: '0.82rem' }}>
+                              Total Amount
+                            </span>
+                            <span className="fw-bold text-dark" style={{ fontSize: '0.92rem' }}>
+                              {item.totalCharge || 'Rp 450.000,00'}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Action Button: View Detail Invoice */}
+                        <Button
+                          variant="outline-primary"
+                          className="w-100 d-flex align-items-center justify-content-center gap-2 py-2 fw-semibold btn-preview-action"
+                          onClick={() => setActiveInvoiceItem(item)}
+                        >
+                          <FileText size={16} weight="bold" />
+                          <span>View Detail Invoice</span>
+                        </Button>
                       </div>
                     )}
                   </div>
@@ -365,7 +471,7 @@ export function ExtensionHistoryCard({ extensionLogs = [] }) {
         )}
       </div>
 
-      {/* Lightbox Modal */}
+      {/* Lightbox Modal for Documentation Photos */}
       <Modal show={!!selectedPhoto} onHide={() => setSelectedPhoto(null)} centered size="lg">
         <Modal.Header closeButton style={{ backgroundColor: '#f8fafc', padding: '16px 20px' }}>
           <Modal.Title className="fs-6 fw-bold text-dark">Technical Inspection Photo</Modal.Title>
@@ -381,6 +487,107 @@ export function ExtensionHistoryCard({ extensionLogs = [] }) {
           )}
         </Modal.Body>
       </Modal>
+
+      {/* Invoice Detail Modal for Chargeable Extension Bills */}
+      {activeInvoiceItem && (
+        <Modal
+          show={!!activeInvoiceItem}
+          onHide={() => setActiveInvoiceItem(null)}
+          size="lg"
+          centered
+        >
+          <Modal.Header closeButton style={{ backgroundColor: '#f8fafc', padding: '16px' }}>
+            <div>
+              <Modal.Title className="fw-bold fs-6 text-dark mb-1">
+                Fit Out Extension Invoice #{activeInvoiceItem.invoiceNumber || 'PRO/INV/082026/000032'}
+              </Modal.Title>
+              <div className="text-muted small" style={{ fontSize: '0.76rem' }}>
+                Permit: {permit?.permitNumber || 'PRO/FP/082026/000104'} &bull; Issued Date:{' '}
+                {activeInvoiceItem.billDate || activeInvoiceItem.decidedAt || '10/08/2026, 03:55 PM'} &bull; Due Date:{' '}
+                <strong className="text-danger">
+                  {activeInvoiceItem.dueDate || '11/08/2026, 11:59 PM'}
+                </strong>
+              </div>
+            </div>
+          </Modal.Header>
+
+          <Modal.Body style={{ padding: '20px' }}>
+            {/* Invoice Summary Header */}
+            <div className="p-3 rounded-3 border bg-light mb-3" style={{ borderColor: '#e2e8f0' }}>
+              <div className="d-flex justify-content-between align-items-center">
+                <div>
+                  <div className="text-muted small">Status Tagihan</div>
+                  <div
+                    className="fw-bold fs-6"
+                    style={{ color: activeInvoiceItem.isPaid ? '#16a34a' : '#ea580c' }}
+                  >
+                    {activeInvoiceItem.isPaid ? 'PAID' : 'UNPAID'}
+                  </div>
+                </div>
+                <div className="text-end">
+                  <div className="text-muted small">Total Tagihan</div>
+                  <div className="fw-bold text-dark fs-5">
+                    {activeInvoiceItem.totalCharge || 'Rp 450.000,00'}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <Table responsive bordered hover className="mb-3">
+              <thead className="table-light">
+                <tr>
+                  <th style={{ fontSize: '0.78rem' }}>Description</th>
+                  <th className="text-center" style={{ fontSize: '0.78rem', width: '100px' }}>
+                    Qty / Days
+                  </th>
+                  <th className="text-end" style={{ fontSize: '0.78rem', width: '180px' }}>
+                    Amount
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div className="fw-bold" style={{ fontSize: '0.82rem' }}>
+                      Fit Out Extension Fee - Supervisi Teknis Harian
+                    </div>
+                    <div className="text-muted small" style={{ fontSize: '0.72rem' }}>
+                      Fee for extended period up to {activeInvoiceItem.targetDate}
+                    </div>
+                  </td>
+                  <td className="text-center align-middle" style={{ fontSize: '0.82rem' }}>
+                    +{activeInvoiceItem.requestedDays || 3} Days
+                  </td>
+                  <td className="text-end align-middle fw-bold" style={{ fontSize: '0.84rem' }}>
+                    {activeInvoiceItem.totalCharge || 'Rp 450.000,00'}
+                  </td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th colSpan={2} className="text-end fw-bold" style={{ fontSize: '0.82rem' }}>
+                    Total Invoice:
+                  </th>
+                  <th className="text-end fw-bold text-dark" style={{ fontSize: '0.9rem' }}>
+                    {activeInvoiceItem.totalCharge || 'Rp 450.000,00'}
+                  </th>
+                </tr>
+              </tfoot>
+            </Table>
+          </Modal.Body>
+
+          <Modal.Footer style={{ backgroundColor: '#f8fafc', padding: '16px' }}>
+            <Button
+              variant="outline-secondary"
+              className="fw-bold px-4 py-2"
+              style={{ backgroundColor: '#ffffff', fontSize: '0.84rem', borderRadius: '0.45rem' }}
+              onClick={() => setActiveInvoiceItem(null)}
+            >
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      )}
     </div>
   );
 }
