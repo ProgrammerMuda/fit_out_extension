@@ -14,77 +14,26 @@ import { Modal } from 'react-bootstrap';
 export function ExtensionHistoryCard({ extensionLogs = [] }) {
   const [selectedPhoto, setSelectedPhoto] = useState(null);
 
-  const rejectedCount = extensionLogs.filter((log) => log.status === 'REJECTED').length;
-  const pendingCount = extensionLogs.filter((log) => log.status === 'PENDING_TR_REVIEW').length;
-  const approvedCount = extensionLogs.filter(
-    (log) => log.status === 'APPROVED_FREE' || log.status === 'APPROVED_CHARGEABLE'
-  ).length;
-
   return (
     <div className="proa-card overflow-hidden mb-4">
-      {/* Light Gray Card Header: Generous 18px 24px Padding */}
+      {/* Light Gray Card Header: Clean Minimalist & Centered */}
       <div
-        className="d-flex align-items-center justify-content-between border-bottom"
+        className="d-flex align-items-center gap-2.5 border-bottom"
         style={{
           backgroundColor: '#f8fafc',
           borderColor: '#e2e8f0',
           padding: '18px 24px',
         }}
       >
-        <div className="d-flex align-items-center gap-2.5">
-          <div className="d-flex align-items-center flex-shrink-0" style={{ color: '#27b29b' }}>
-            <ClockCounterClockwise size={22} weight="bold" />
-          </div>
-          <span
-            className="fw-bold text-dark text-uppercase"
-            style={{ letterSpacing: '0.04em', fontSize: '0.86rem', lineHeight: 1 }}
-          >
-            EXTENSION HISTORY
-          </span>
+        <div className="d-flex align-items-center flex-shrink-0" style={{ color: '#27b29b' }}>
+          <ClockCounterClockwise size={22} weight="bold" />
         </div>
-
-        {/* Status Count Badges */}
-        <div className="d-flex align-items-center gap-2">
-          {rejectedCount > 0 && (
-            <span
-              className="badge rounded-pill fw-bold"
-              style={{
-                backgroundColor: '#fee2e2',
-                color: '#dc2626',
-                fontSize: '0.72rem',
-                padding: '0.35rem 0.75rem',
-              }}
-            >
-              {rejectedCount} Rejected
-            </span>
-          )}
-          {pendingCount > 0 && (
-            <span
-              className="badge rounded-pill fw-bold"
-              style={{
-                backgroundColor: '#fff7ed',
-                color: '#ea580c',
-                fontSize: '0.72rem',
-                padding: '0.35rem 0.75rem',
-              }}
-            >
-              {pendingCount} Pending Review
-            </span>
-          )}
-          {approvedCount > 0 && (
-            <span
-              className="badge rounded-pill fw-bold"
-              style={{
-                backgroundColor: '#ecfdf5',
-                color: '#059669',
-                fontSize: '0.72rem',
-                padding: '0.35rem 0.75rem',
-              }}
-            >
-              {approvedCount} Approved
-            </span>
-          )}
-        </div>
+        <span
+          className="fw-bold text-dark text-uppercase"
+          style={{ letterSpacing: '0.04em', fontSize: '0.86rem', lineHeight: 1 }}
+        >
+          EXTENSION HISTORY
+        </span>
       </div>
 
       {/* Card Body: Generous 24px Padding */}
