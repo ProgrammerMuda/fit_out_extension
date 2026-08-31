@@ -5,7 +5,9 @@ import {
   CheckCircle,
   Clock,
   User,
+  Calendar,
   Image as ImageIcon,
+  MagnifyingGlassPlus,
 } from '@phosphor-icons/react';
 import { Modal } from 'react-bootstrap';
 
@@ -20,7 +22,7 @@ export function ExtensionHistoryCard({ extensionLogs = [] }) {
 
   return (
     <div className="proa-card overflow-hidden mb-3">
-      {/* Clean Light Gray Card Header */}
+      {/* Light Gray Card Header */}
       <div
         className="p-3 px-4 d-flex align-items-center justify-content-between border-bottom"
         style={{ backgroundColor: '#f8fafc', borderColor: '#e2e8f0' }}
@@ -46,7 +48,7 @@ export function ExtensionHistoryCard({ extensionLogs = [] }) {
                 backgroundColor: '#fee2e2',
                 color: '#dc2626',
                 fontSize: '0.68rem',
-                padding: '0.25rem 0.6rem',
+                padding: '0.28rem 0.65rem',
               }}
             >
               {rejectedCount} Rejected
@@ -59,7 +61,7 @@ export function ExtensionHistoryCard({ extensionLogs = [] }) {
                 backgroundColor: '#fff7ed',
                 color: '#ea580c',
                 fontSize: '0.68rem',
-                padding: '0.25rem 0.6rem',
+                padding: '0.28rem 0.65rem',
               }}
             >
               {pendingCount} Pending Review
@@ -72,7 +74,7 @@ export function ExtensionHistoryCard({ extensionLogs = [] }) {
                 backgroundColor: '#ecfdf5',
                 color: '#059669',
                 fontSize: '0.68rem',
-                padding: '0.25rem 0.6rem',
+                padding: '0.28rem 0.65rem',
               }}
             >
               {approvedCount} Approved
@@ -81,230 +83,275 @@ export function ExtensionHistoryCard({ extensionLogs = [] }) {
         </div>
       </div>
 
-      {/* Card Body: Sleek Vertical Timeline */}
+      {/* Card Body */}
       <div className="p-4">
         {extensionLogs.length === 0 ? (
           <div className="text-center py-4 text-muted small">
             No extension records found for this permit.
           </div>
         ) : (
-          <div className="position-relative">
+          <div className="d-flex flex-column gap-3">
             {extensionLogs.map((item, index) => {
               const isRejected = item.status === 'REJECTED';
               const isPending = item.status === 'PENDING_TR_REVIEW';
               const isApproved = item.status === 'APPROVED_FREE' || item.status === 'APPROVED_CHARGEABLE';
-              const isLast = index === extensionLogs.length - 1;
 
-              // Node & Status styles
-              let nodeBg = '#f1f5f9';
-              let nodeIconColor = '#64748b';
-              let NodeIcon = Clock;
+              // Status Badge Config
               let badgeBg = '#f1f5f9';
               let badgeColor = '#475569';
               let badgeText = 'RECORDED';
 
               if (isRejected) {
-                nodeBg = '#fee2e2';
-                nodeIconColor = '#dc2626';
-                NodeIcon = XCircle;
                 badgeBg = '#fee2e2';
                 badgeColor = '#dc2626';
                 badgeText = 'REJECTED';
               } else if (isPending) {
-                nodeBg = '#fff7ed';
-                nodeIconColor = '#ea580c';
-                NodeIcon = Clock;
                 badgeBg = '#fff7ed';
                 badgeColor = '#ea580c';
                 badgeText = 'WAITING FOR APPROVAL';
               } else if (isApproved) {
-                nodeBg = '#ecfdf5';
-                nodeIconColor = '#059669';
-                NodeIcon = CheckCircle;
                 badgeBg = '#ecfdf5';
                 badgeColor = '#059669';
                 badgeText = item.status === 'APPROVED_FREE' ? 'APPROVED (FREE)' : 'APPROVED (CHARGEABLE)';
               }
 
               return (
-                <div key={item.id || index} className="d-flex gap-3 position-relative pb-4">
-                  {/* Left Timeline Rail */}
-                  <div className="d-flex flex-column align-items-center flex-shrink-0" style={{ width: '28px' }}>
-                    <div
-                      className="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
+                <div
+                  key={item.id || index}
+                  className="rounded-3 border overflow-hidden bg-white shadow-xs"
+                  style={{ borderColor: isRejected ? '#fecaca' : '#e2e8f0' }}
+                >
+                  {/* Card Item Header */}
+                  <div
+                    className="p-3 px-3.5 d-flex align-items-center justify-content-between flex-wrap gap-2 border-bottom"
+                    style={{
+                      backgroundColor: isRejected ? '#fffbfb' : '#f8fafc',
+                      borderColor: isRejected ? '#fee2e2' : '#e2e8f0',
+                    }}
+                  >
+                    <div className="d-flex align-items-center gap-2 flex-wrap">
+                      <span className="fw-bold text-dark" style={{ fontSize: '0.88rem' }}>
+                        {item.title}
+                      </span>
+                      {item.requestedDays && (
+                        <span
+                          className="badge rounded-pill fw-semibold"
+                          style={{
+                            backgroundColor: '#f1f5f9',
+                            color: '#334155',
+                            fontSize: '0.72rem',
+                            padding: '0.25rem 0.6rem',
+                          }}
+                        >
+                          +{item.requestedDays} Days &bull; until {item.targetDate}
+                        </span>
+                      )}
+                    </div>
+
+                    <span
+                      className="badge rounded-pill fw-bold"
                       style={{
-                        width: '28px',
-                        height: '28px',
-                        backgroundColor: nodeBg,
-                        color: nodeIconColor,
-                        zIndex: 2,
+                        backgroundColor: badgeBg,
+                        color: badgeColor,
+                        fontSize: '0.68rem',
+                        padding: '0.3rem 0.75rem',
+                        letterSpacing: '0.03em',
                       }}
                     >
-                      <NodeIcon size={16} weight="bold" />
-                    </div>
-
-                    {!isLast && (
-                      <div
-                        className="flex-grow-1"
-                        style={{
-                          width: '2px',
-                          backgroundColor: '#e2e8f0',
-                          minHeight: '28px',
-                          marginTop: '4px',
-                          marginBottom: '-6px',
-                          zIndex: 1,
-                        }}
-                      />
-                    )}
+                      {badgeText}
+                    </span>
                   </div>
 
-                  {/* Right Content */}
-                  <div className="flex-grow-1 pt-0.5">
-                    {/* Header Row: Title, Duration & Status Badge */}
-                    <div className="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-1">
-                      <div className="d-flex align-items-center gap-2">
-                        <span className="fw-bold text-dark" style={{ fontSize: '0.88rem' }}>
-                          {item.title}
-                        </span>
-                        {item.requestedDays && (
-                          <span
-                            className="badge rounded-pill fw-semibold"
-                            style={{
-                              backgroundColor: '#f1f5f9',
-                              color: '#475569',
-                              fontSize: '0.7rem',
-                              padding: '0.2rem 0.55rem',
-                            }}
-                          >
-                            +{item.requestedDays} Days &bull; until {item.targetDate}
-                          </span>
-                        )}
+                  {/* Card Item Body */}
+                  <div className="p-3.5 px-4">
+                    {/* Submitter Info Row */}
+                    <div className="row g-2 mb-3 pb-2 border-bottom" style={{ borderColor: '#f1f5f9' }}>
+                      <div className="col-12 col-sm-6">
+                        <div className="text-muted fw-semibold text-uppercase" style={{ fontSize: '0.68rem', letterSpacing: '0.03em' }}>
+                          REQUESTED BY
+                        </div>
+                        <div className="fw-bold text-dark mt-0.5" style={{ fontSize: '0.84rem' }}>
+                          {item.requestedBy || 'Budi Santoso (Engineering Lead 01)'}
+                        </div>
                       </div>
-
-                      <span
-                        className="badge rounded-pill fw-bold"
-                        style={{
-                          backgroundColor: badgeBg,
-                          color: badgeColor,
-                          fontSize: '0.68rem',
-                          padding: '0.25rem 0.65rem',
-                          letterSpacing: '0.02em',
-                        }}
-                      >
-                        {badgeText}
-                      </span>
+                      <div className="col-12 col-sm-6">
+                        <div className="text-muted fw-semibold text-uppercase" style={{ fontSize: '0.68rem', letterSpacing: '0.03em' }}>
+                          SUBMITTED AT
+                        </div>
+                        <div className="text-secondary fw-semibold mt-0.5" style={{ fontSize: '0.82rem' }}>
+                          {item.requestedAt}
+                        </div>
+                      </div>
                     </div>
 
-                    {/* Submitter & Date */}
-                    <div className="text-muted small mb-2" style={{ fontSize: '0.74rem' }}>
-                      Requested by <strong className="text-secondary">{item.requestedBy}</strong> &bull; {item.requestedAt}
-                    </div>
-
-                    {/* Engineering Technical Reason */}
+                    {/* Engineering Technical Reason Section */}
                     {item.requestReason && (
-                      <div
-                        className="text-secondary small mb-2 ps-2.5"
-                        style={{
-                          borderLeft: '2px solid #cbd5e1',
-                          fontSize: '0.78rem',
-                          lineHeight: '1.45',
-                        }}
-                      >
-                        <span className="fw-semibold text-dark">Technical Notes: </span>
-                        {item.requestReason}
+                      <div className="mb-3">
+                        <div
+                          className="fw-bold text-uppercase text-dark mb-1.5"
+                          style={{ fontSize: '0.72rem', letterSpacing: '0.04em' }}
+                        >
+                          TECHNICAL NOTES
+                        </div>
+                        <div
+                          className="fst-italic text-secondary rounded-2 border bg-light"
+                          style={{
+                            fontSize: '0.84rem',
+                            lineHeight: '1.55',
+                            padding: '12px 14px',
+                            borderColor: '#e2e8f0',
+                            color: '#334155',
+                          }}
+                        >
+                          &ldquo;{item.requestReason}&rdquo;
+                        </div>
                       </div>
                     )}
 
-                    {/* Photo Attachments Preview */}
+                    {/* Attached Photos (if available) */}
                     {item.photos && item.photos.length > 0 && (
-                      <div className="d-flex align-items-center gap-2 mb-2.5 flex-wrap">
-                        <span className="text-muted small d-flex align-items-center gap-1" style={{ fontSize: '0.72rem' }}>
-                          <ImageIcon size={13} />
-                          <span>Photos:</span>
-                        </span>
-                        {item.photos.map((src, pIdx) => (
-                          <img
-                            key={pIdx}
-                            src={src}
-                            alt={`Photo ${pIdx + 1}`}
-                            className="rounded border cursor-pointer hover-opacity"
-                            style={{
-                              width: '46px',
-                              height: '46px',
-                              objectFit: 'cover',
-                              borderColor: '#e2e8f0',
-                            }}
-                            onClick={() => setSelectedPhoto(src)}
-                            title="Click to view full photo"
-                          />
-                        ))}
+                      <div className="mb-3">
+                        <div
+                          className="fw-bold text-uppercase text-dark mb-1.5 d-flex align-items-center gap-1.5"
+                          style={{ fontSize: '0.72rem', letterSpacing: '0.04em' }}
+                        >
+                          <ImageIcon size={14} weight="bold" />
+                          <span>REQUEST PHOTOS ({item.photos.length})</span>
+                        </div>
+                        <div className="d-flex align-items-center gap-2 flex-wrap">
+                          {item.photos.map((src, pIdx) => (
+                            <div
+                              key={pIdx}
+                              className="position-relative rounded-2 overflow-hidden border cursor-pointer group"
+                              style={{ width: '56px', height: '56px', borderColor: '#e2e8f0' }}
+                              onClick={() => setSelectedPhoto(src)}
+                              title="Click to view full photo"
+                            >
+                              <img
+                                src={src}
+                                alt={`Documentation ${pIdx + 1}`}
+                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                              />
+                              <div
+                                className="position-absolute bottom-0 end-0 bg-dark text-white d-flex align-items-center justify-content-center"
+                                style={{
+                                  width: '18px',
+                                  height: '18px',
+                                  opacity: 0.8,
+                                  borderTopLeftRadius: '4px',
+                                }}
+                              >
+                                <MagnifyingGlassPlus size={11} weight="bold" />
+                              </div>
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     )}
 
-                    {/* TR REJECTION DECISION BOX */}
+                    {/* TENANT RELATION REJECTION DECISION BOX */}
                     {isRejected && (
                       <div
-                        className="mt-2 p-2.5 px-3 rounded-2"
+                        className="rounded-3 border p-3 mt-3"
                         style={{
                           backgroundColor: '#fff5f5',
-                          border: '1px solid #fed7d7',
-                          borderLeft: '3px solid #dc2626',
+                          borderColor: '#fca5a5',
                         }}
                       >
-                        <div className="d-flex align-items-center justify-content-between flex-wrap gap-1 mb-1">
-                          <span
-                            className="fw-bold text-danger d-flex align-items-center gap-1"
-                            style={{ fontSize: '0.74rem', letterSpacing: '0.02em' }}
-                          >
-                            <XCircle size={14} weight="fill" />
-                            TR REJECTION DECISION
-                          </span>
-                          <span className="text-muted" style={{ fontSize: '0.7rem' }}>
+                        <div className="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-2">
+                          <div className="d-flex align-items-center gap-1.5">
+                            <XCircle size={17} weight="bold" color="#dc2626" />
+                            <span
+                              className="fw-bold text-danger text-uppercase"
+                              style={{ fontSize: '0.76rem', letterSpacing: '0.04em' }}
+                            >
+                              TENANT RELATION DECISION NOTES (REJECTED)
+                            </span>
+                          </div>
+                          <span className="text-muted small" style={{ fontSize: '0.72rem' }}>
                             {item.decidedAt}
                           </span>
                         </div>
-                        <div className="text-muted small mb-1" style={{ fontSize: '0.72rem' }}>
-                          Evaluated by: <span className="text-dark fw-semibold">{item.decidedBy || 'Tenant Relation Lead'}</span>
+
+                        {/* Rejection Reason Text in Clean White Box */}
+                        <div
+                          className="bg-white rounded-2 border p-3 mb-2 text-dark fst-italic"
+                          style={{
+                            fontSize: '0.84rem',
+                            lineHeight: '1.55',
+                            borderColor: '#fca5a5',
+                            color: '#1e293b',
+                          }}
+                        >
+                          &ldquo;{item.decisionReason}&rdquo;
                         </div>
-                        <div className="text-dark small" style={{ fontSize: '0.78rem', lineHeight: '1.45' }}>
-                          <strong className="text-danger">Reason:</strong> &ldquo;{item.decisionReason}&rdquo;
+
+                        {/* Evaluator Footer */}
+                        <div
+                          className="d-flex align-items-center justify-content-between flex-wrap gap-2 text-muted pt-2 border-top"
+                          style={{ borderColor: '#fecaca', fontSize: '0.74rem' }}
+                        >
+                          <span>
+                            Decided by: <strong>{item.decidedBy || 'Tenant Relation Lead - Management'}</strong>
+                          </span>
+                          <span>
+                            Decision: <strong className="text-danger">Request Rejected</strong>
+                          </span>
                         </div>
                       </div>
                     )}
 
-                    {/* TR APPROVAL DECISION BOX */}
+                    {/* TENANT RELATION APPROVAL DECISION BOX */}
                     {isApproved && (
                       <div
-                        className="mt-2 p-2.5 px-3 rounded-2"
+                        className="rounded-3 border p-3 mt-3"
                         style={{
                           backgroundColor: '#f0fdf4',
-                          border: '1px solid #bbf7d0',
-                          borderLeft: '3px solid #16a34a',
+                          borderColor: '#86efac',
                         }}
                       >
-                        <div className="d-flex align-items-center justify-content-between flex-wrap gap-1 mb-1">
-                          <span
-                            className="fw-bold d-flex align-items-center gap-1"
-                            style={{
-                              fontSize: '0.74rem',
-                              color: item.status === 'APPROVED_FREE' ? '#15803d' : '#0369a1',
-                            }}
-                          >
-                            <CheckCircle size={14} weight="fill" />
-                            TR APPROVAL DECISION: {item.status === 'APPROVED_FREE' ? 'FREE OF CHARGE' : 'CHARGEABLE'}
-                          </span>
-                          <span className="text-muted" style={{ fontSize: '0.7rem' }}>
+                        <div className="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-2">
+                          <div className="d-flex align-items-center gap-1.5">
+                            <CheckCircle size={17} weight="bold" color="#16a34a" />
+                            <span
+                              className="fw-bold text-success text-uppercase"
+                              style={{ fontSize: '0.76rem', letterSpacing: '0.04em' }}
+                            >
+                              TENANT RELATION DECISION (APPROVED - {item.status === 'APPROVED_FREE' ? 'FREE OF CHARGE' : 'CHARGEABLE'})
+                            </span>
+                          </div>
+                          <span className="text-muted small" style={{ fontSize: '0.72rem' }}>
                             {item.decidedAt}
                           </span>
                         </div>
-                        <div className="text-muted small mb-1" style={{ fontSize: '0.72rem' }}>
-                          Approved by: <span className="text-dark fw-semibold">{item.decidedBy || 'Tenant Relation Lead'}</span>
-                        </div>
+
+                        {/* Approval Notes Text in Clean White Box */}
                         {item.decisionReason && (
-                          <div className="text-dark small" style={{ fontSize: '0.78rem', lineHeight: '1.45' }}>
-                            <strong className="text-success">Notes:</strong> &ldquo;{item.decisionReason}&rdquo;
+                          <div
+                            className="bg-white rounded-2 border p-3 mb-2 text-dark fst-italic"
+                            style={{
+                              fontSize: '0.84rem',
+                              lineHeight: '1.55',
+                              borderColor: '#86efac',
+                              color: '#1e293b',
+                            }}
+                          >
+                            &ldquo;{item.decisionReason}&rdquo;
                           </div>
                         )}
+
+                        {/* Evaluator Footer */}
+                        <div
+                          className="d-flex align-items-center justify-content-between flex-wrap gap-2 text-muted pt-2 border-top"
+                          style={{ borderColor: '#bbf7d0', fontSize: '0.74rem' }}
+                        >
+                          <span>
+                            Approved by: <strong>{item.decidedBy || 'Tenant Relation Lead - Management'}</strong>
+                          </span>
+                          <span>
+                            Policy: <strong className="text-success">{item.status === 'APPROVED_FREE' ? 'Free Tolerance Exemption' : 'Supervision Chargeable'}</strong>
+                          </span>
+                        </div>
                       </div>
                     )}
                   </div>
