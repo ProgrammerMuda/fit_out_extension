@@ -233,7 +233,7 @@ export function usePermitController() {
       const existingPending = prev.find((item) => item.status === 'PENDING_TR_REVIEW');
       const newEntry = {
         id: `EXT-LOG-${Date.now().toString().slice(-3)}`,
-        title: existingPending ? existingPending.title : `Extension Decision (+${additionalDays} Days)`,
+        title: existingPending ? existingPending.title : 'Direct Extension Decision',
         requestedBy: hasEngReq ? 'Budi Santoso (Engineering Lead 01)' : 'Tenant Relation (Direct)',
         requestedAt: existingPending ? existingPending.requestedAt : nowStr,
         requestedDays: additionalDays,
@@ -304,7 +304,7 @@ export function usePermitController() {
         return [
           {
             id: `EXT-LOG-${Date.now().toString().slice(-3)}`,
-            title: 'Extension Request (+3 Days)',
+            title: 'Extension Request',
             requestedBy: 'Budi Santoso (Engineering Lead 01)',
             requestedAt: '10/08/2026, 02:30 PM',
             requestedDays: 3,

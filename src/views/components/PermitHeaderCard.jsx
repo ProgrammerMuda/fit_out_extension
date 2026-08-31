@@ -52,7 +52,7 @@ export function PermitHeaderCard({
                 borderRadius: '0.35rem',
               }}
             >
-              <span>EXTENDED (+{permit.extensionDays || 3} DAYS)</span>
+              <span>EXTENDED</span>
             </span>
           )}
           <span className="text-secondary fw-medium" style={{ fontSize: '0.84rem' }}>
