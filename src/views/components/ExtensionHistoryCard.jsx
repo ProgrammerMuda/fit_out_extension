@@ -150,7 +150,7 @@ export function ExtensionHistoryCard({ extensionLogs = [] }) {
                         >
                           SUBMITTED AT
                         </div>
-                        <div className="text-secondary fw-semibold" style={{ fontSize: '0.86rem' }}>
+                        <div className="fw-bold text-dark" style={{ fontSize: '0.88rem' }}>
                           {item.requestedAt}
                         </div>
                       </div>
