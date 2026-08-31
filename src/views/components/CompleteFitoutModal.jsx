@@ -74,21 +74,9 @@ export function CompleteFitoutModal({ show, onHide, onConfirm }) {
 
       <Form onSubmit={handleSubmit}>
         <Modal.Body className="bg-white" style={{ padding: '24px' }}>
-          {/* Info Alert */}
-          <div
-            className="rounded-3 border mb-4 p-3 d-flex align-items-center gap-2.5"
-            style={{ backgroundColor: '#f0fdf4', borderColor: '#bbf7d0', color: '#15803d' }}
-          >
-            <CheckCircle size={20} weight="fill" className="flex-shrink-0" />
-            <span style={{ fontSize: '0.82rem', lineHeight: '1.45' }}>
-              Confirming completion of fitout works will advance the permit status to{' '}
-              <strong>FINAL INSPECTION</strong>.
-            </span>
-          </div>
-
           {/* 1. Custom File Upload Bar matching design */}
-          <div className="mb-4">
-            <Form.Label className="fw-bold text-dark mb-1.5" style={{ fontSize: '0.82rem' }}>
+          <div style={{ marginBottom: '24px' }}>
+            <Form.Label className="fw-bold text-dark d-block" style={{ fontSize: '0.82rem', marginBottom: '8px' }}>
               Upload Documentation File <span className="text-danger">*</span>
             </Form.Label>
 
@@ -154,16 +142,16 @@ export function CompleteFitoutModal({ show, onHide, onConfirm }) {
 
             {/* Subtext info */}
             <div
-              className="text-secondary small mt-1.5"
-              style={{ fontSize: '0.74rem', color: '#64748b' }}
+              className="text-secondary small"
+              style={{ fontSize: '0.74rem', color: '#64748b', marginTop: '6px' }}
             >
               Supported formats: PDF, PNG, JPG (Max. 5MB)
             </div>
           </div>
 
           {/* 2. Notes Section */}
-          <div className="mb-2">
-            <Form.Label className="fw-bold text-dark mb-1.5" style={{ fontSize: '0.82rem' }}>
+          <div>
+            <Form.Label className="fw-bold text-dark d-block" style={{ fontSize: '0.82rem', marginBottom: '8px' }}>
               Notes <span className="text-danger">*</span>
             </Form.Label>
             <Form.Control
