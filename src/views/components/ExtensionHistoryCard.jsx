@@ -16,21 +16,17 @@ export function ExtensionHistoryCard({ extensionLogs = [] }) {
 
   return (
     <div className="proa-card overflow-hidden mb-4">
-      {/* Light Gray Card Header: Clean Minimalist & Centered */}
+      {/* Light Gray Card Header: Exact Match with other cards */}
       <div
-        className="d-flex align-items-center gap-2.5 border-bottom"
-        style={{
-          backgroundColor: '#f8fafc',
-          borderColor: '#e2e8f0',
-          padding: '18px 24px',
-        }}
+        className="p-3 px-4 d-flex align-items-center gap-2 border-bottom"
+        style={{ backgroundColor: '#f8fafc', borderColor: '#e2e8f0' }}
       >
         <div className="d-flex align-items-center flex-shrink-0" style={{ color: '#27b29b' }}>
-          <ClockCounterClockwise size={22} weight="bold" />
+          <ClockCounterClockwise size={21} weight="bold" />
         </div>
         <span
           className="fw-bold text-dark text-uppercase"
-          style={{ letterSpacing: '0.04em', fontSize: '0.86rem', lineHeight: 1 }}
+          style={{ letterSpacing: '0.04em', fontSize: '0.84rem', lineHeight: 1 }}
         >
           EXTENSION HISTORY
         </span>
