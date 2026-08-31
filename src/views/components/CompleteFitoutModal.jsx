@@ -161,20 +161,17 @@ export function CompleteFitoutModal({ show, onHide, onConfirm }) {
             </div>
           </div>
 
-          {/* 2. Tenant Relation / Engineering Notes */}
+          {/* 2. Notes Section */}
           <div className="mb-2">
-            <Form.Label className="fw-bold text-dark mb-1" style={{ fontSize: '0.82rem' }}>
-              Completion Evaluation Notes <span className="text-danger">*</span>
+            <Form.Label className="fw-bold text-dark mb-1.5" style={{ fontSize: '0.82rem' }}>
+              Notes <span className="text-danger">*</span>
             </Form.Label>
-            <div className="text-muted small mb-2" style={{ fontSize: '0.74rem' }}>
-              Provide a verification summary and on-site evaluation before advancing to Final Inspection.
-            </div>
             <Form.Control
               as="textarea"
               rows={3}
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="Enter completion notes and evaluation details..."
+              placeholder="Enter notes..."
               style={{
                 fontSize: '0.86rem',
                 color: '#0f172a',
