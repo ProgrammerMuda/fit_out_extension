@@ -135,16 +135,14 @@ export function ExtensionHistoryCard({ extensionLogs = [] }) {
                         >
                           REQUESTED EXTENSION
                         </div>
-                        <div className="d-flex align-items-baseline gap-2.5 flex-wrap">
-                          <span className="fw-bold text-dark" style={{ fontSize: '0.94rem' }}>
-                            +{item.requestedDays || 3} Days
-                          </span>
-                          <span
-                            className="fw-semibold text-secondary"
-                            style={{ fontSize: '0.9rem', letterSpacing: '0.01em' }}
-                          >
-                            (until {item.targetDate})
-                          </span>
+                        <div className="fw-bold text-dark" style={{ fontSize: '0.94rem' }}>
+                          +{item.requestedDays || 3} Days
+                        </div>
+                        <div
+                          className="fw-semibold text-secondary"
+                          style={{ fontSize: '0.9rem', marginTop: '6px', letterSpacing: '0.01em' }}
+                        >
+                          (until {item.targetDate})
                         </div>
                       </div>
 
