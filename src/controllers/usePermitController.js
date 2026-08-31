@@ -63,19 +63,46 @@ export function usePermitController() {
   // Extension Information State (for both Free and Chargeable)
   const [extensionInfo, setExtensionInfo] = useState(null);
 
-  // Dynamic tracking timeline items
+  // Dynamic tracking timeline items (Clean general permit workflow milestones)
   const [trackingLogs, setTrackingLogs] = useState([
-    {
-      title: 'Schedule Extension Requested by Engineering Lead (+3 Days)',
-      actor: 'Budi Santoso (Engineering Lead 01)',
-      time: '10/08/2026, 14:30',
-      note: 'Reason: Ditemukan kebocoran sambungan pipa PVC area pantry saat uji hidrolik. Membutuhkan waktu curing sealant lem 3 hari kerja.',
-    },
     {
       title: 'Fitout Work In Progress (On Work)',
       actor: 'System / Engineering Lead',
-      time: '04/08/2026, 08:30',
-      note: 'Fitout started on site by Vendor CV Bintang Teknik.',
+      time: '04/08/2026, 08:30 AM',
+      type: 'standard',
+      notes: 'Fitout started on site by Vendor CV Bintang Teknik.',
+    },
+  ]);
+
+  // Dedicated Extension Logs State (Tracks all Extension requests, approvals, and rejections)
+  const [extensionLogs, setExtensionLogs] = useState([
+    {
+      id: 'EXT-LOG-002',
+      title: 'Extension Request #2 (+3 Days)',
+      requestedBy: 'Budi Santoso (Engineering Lead 01)',
+      requestedAt: '10/08/2026, 02:30 PM',
+      requestedDays: 3,
+      targetDate: '13 Aug 2026',
+      status: 'PENDING_TR_REVIEW',
+      requestReason:
+        'Ditemukan kendala kebocoran pipa induk sambungan PVC saat uji tekan hidrolik di area pantry. Diperlukan waktu curing sealant lem 3 hari kerja sebelum uji kelayakan ulang.',
+      photos: ['/images/pipe_1.jpg', '/images/pipe_2.jpg', '/images/pipe_3.jpg'],
+    },
+    {
+      id: 'EXT-LOG-001',
+      title: 'Extension Request #1 (+2 Days)',
+      requestedBy: 'Budi Santoso (Engineering Lead 01)',
+      requestedAt: '08/08/2026, 11:20 AM',
+      requestedDays: 2,
+      targetDate: '12 Aug 2026',
+      status: 'REJECTED',
+      requestReason:
+        'Pemasangan keramik dinding kamar mandi tertunda akibat kendala pengiriman semen instan dari supplier.',
+      photos: ['/images/pipe_2.jpg'],
+      decidedBy: 'Tenant Relation Lead - Management',
+      decidedAt: '08/08/2026, 03:40 PM',
+      decisionReason:
+        'Permohonan perpanjangan +2 hari tidak disetujui karena jadwal pengerjaan unit masih dalam batas toleransi awal. Kontraktor diminta mengoptimalkan sisa waktu pengerjaan dan menambah tenaga kerja.',
     },
   ]);
 
@@ -201,25 +228,29 @@ export function usePermitController() {
       setExtensionBill(null);
     }
 
-    // Add Timeline Activity Log
-    setTrackingLogs((prev) => [
-      {
-        title: hasEngReq
-          ? isChargeable
-            ? `Engineering Extension Approved - Waiting for Payment (+${additionalDays} Days)`
-            : `Engineering Extension Approved - Free Tolerance (+${additionalDays} Days)`
-          : isChargeable
-          ? `Direct Extension by TR - Waiting for Payment (+${additionalDays} Days)`
-          : `Direct Extension by TR - Free Tolerance (+${additionalDays} Days)`,
-        actor: 'Tenant Relation Lead - Management',
-        time: nowStr,
-        type: extensionType === 'chargeable' ? 'chargeable' : 'free',
-        notes: isChargeable
-          ? `Decision: Approved as Chargeable (+${additionalDays} Days until ${newEndDateStr}). Extension invoice #PRO/INV/082026/000032 issued (${formattedCharge}). ${decisionNotes ? `Notes: ${decisionNotes}` : ''}`
-          : `Decision: Approved as Free Exemption (+${additionalDays} Days until ${newEndDateStr}). Reason: ${cleanFreeReason}. ${decisionNotes ? `Notes: ${decisionNotes}` : ''}`,
-      },
-      ...prev,
-    ]);
+    // Update Dedicated Extension History Logs (Approved Entry)
+    setExtensionLogs((prev) => {
+      const existingPending = prev.find((item) => item.status === 'PENDING_TR_REVIEW');
+      const newEntry = {
+        id: `EXT-LOG-${Date.now().toString().slice(-3)}`,
+        title: existingPending ? existingPending.title : `Extension Decision (+${additionalDays} Days)`,
+        requestedBy: hasEngReq ? 'Budi Santoso (Engineering Lead 01)' : 'Tenant Relation (Direct)',
+        requestedAt: existingPending ? existingPending.requestedAt : nowStr,
+        requestedDays: additionalDays,
+        targetDate: newEndDateStr,
+        status: extensionType === 'chargeable' ? 'APPROVED_CHARGEABLE' : 'APPROVED_FREE',
+        feeType: extensionType,
+        feeAmount: extensionType === 'chargeable' ? totalCharge : 0,
+        requestReason: existingPending
+          ? existingPending.requestReason
+          : 'Direct schedule extension issued by Tenant Relation for unit completion.',
+        photos: existingPending ? existingPending.photos : [],
+        decidedBy: 'Tenant Relation Lead - Management',
+        decidedAt: nowStr,
+        decisionReason: extensionType === 'free' ? cleanFreeReason : (decisionNotes || 'Supervision fee applied.'),
+      };
+      return [newEntry, ...prev.filter((item) => item.status !== 'PENDING_TR_REVIEW')];
+    });
 
     // Show Toast
     setToastInfo({
@@ -252,24 +283,52 @@ export function usePermitController() {
       });
     });
 
-    // Add Timeline Activity Log
-    setTrackingLogs((prev) => [
-      {
-        title: 'Engineering Extension Request Rejected by Tenant Relation',
-        actor: 'Tenant Relation Lead - Management',
-        time: nowStr,
-        type: 'rejected',
-        notes: `Rejection reason: ${cleanReason}`,
-      },
-      ...prev,
-    ]);
+    // Update Dedicated Extension History Logs (Mark Pending as REJECTED)
+    setExtensionLogs((prev) => {
+      let found = false;
+      const updated = prev.map((item) => {
+        if (item.status === 'PENDING_TR_REVIEW') {
+          found = true;
+          return {
+            ...item,
+            status: 'REJECTED',
+            decidedBy: 'Tenant Relation Lead - Management',
+            decidedAt: nowStr,
+            decisionReason: cleanReason,
+          };
+        }
+        return item;
+      });
+
+      if (!found) {
+        return [
+          {
+            id: `EXT-LOG-${Date.now().toString().slice(-3)}`,
+            title: 'Extension Request (+3 Days)',
+            requestedBy: 'Budi Santoso (Engineering Lead 01)',
+            requestedAt: '10/08/2026, 02:30 PM',
+            requestedDays: 3,
+            targetDate: '13 Aug 2026',
+            status: 'REJECTED',
+            requestReason:
+              'Ditemukan kendala kebocoran pipa induk sambungan PVC saat uji tekan hidrolik di area pantry.',
+            photos: ['/images/pipe_1.jpg', '/images/pipe_2.jpg', '/images/pipe_3.jpg'],
+            decidedBy: 'Tenant Relation Lead - Management',
+            decidedAt: nowStr,
+            decisionReason: cleanReason,
+          },
+          ...prev,
+        ];
+      }
+      return updated;
+    });
 
     // Show Toast
     setToastInfo({
       show: true,
       type: 'warning',
       title: 'Extension Request Rejected',
-      message: 'Extension request rejected. Status remains On Work. TR can still issue a new extension or complete fitout.',
+      message: 'Extension request rejected. Status remains On Work. Record added to Extension History card.',
     });
   };
 
@@ -397,6 +456,64 @@ export function usePermitController() {
     }
   };
 
+  // Simulate a New Engineering Request (allows testing request -> reject cycle repeatedly)
+  const handleSimulateEngineeringRequest = () => {
+    setActiveScenario('ENGINEERING_REQUEST');
+    setEngineeringRequest({
+      id: 'REQ-EXT-082026-002',
+      requestedBy: 'Budi Santoso (Engineering Lead 01)',
+      requestedAt: '10 Aug 2026, 15:45',
+      currentEndDate: '10 Aug 2026',
+      requestedEndDate: '14 Aug 2026',
+      requestedDays: 4,
+      technicalReason:
+        'Ditemukan kendala teknis lanjutan pada instalasi kelistrikan jalur panel utama di area unit. Membutuhkan waktu perbaikan kabel dan tes beban selama 4 hari kerja sebelum inspeksi serah terima.',
+      photos: ['/images/pipe_1.jpg', '/images/pipe_2.jpg', '/images/pipe_3.jpg'],
+      status: 'PENDING_TR_REVIEW',
+    });
+
+    setPermit((prev) =>
+      new PermitModel({
+        ...prev,
+        status: 'On Work',
+        scheduledEndDate: '10 Aug 2026',
+        isExtended: false,
+        actionRequired: {
+          role: 'TENANT RELATION',
+          description:
+            'Engineering Lead (Budi Santoso) submitted a schedule extension request (+4 Days until 14 Aug 2026) due to electrical panel testing. Please review and decide (Approve / Reject).',
+        },
+      })
+    );
+
+    setExtensionInfo(null);
+    setExtensionBill(null);
+
+    // Add to Dedicated Extension History
+    setExtensionLogs((prev) => [
+      {
+        id: `EXT-LOG-${Date.now().toString().slice(-3)}`,
+        title: `Extension Request #${prev.length + 1} (+4 Days)`,
+        requestedBy: 'Budi Santoso (Engineering Lead 01)',
+        requestedAt: '10/08/2026, 04:00 PM',
+        requestedDays: 4,
+        targetDate: '14 Aug 2026',
+        status: 'PENDING_TR_REVIEW',
+        requestReason:
+          'Ditemukan kendala teknis lanjutan pada instalasi kelistrikan jalur panel utama. Membutuhkan waktu perbaikan kabel dan tes beban selama 4 hari kerja sebelum inspeksi serah terima.',
+        photos: ['/images/pipe_1.jpg', '/images/pipe_2.jpg', '/images/pipe_3.jpg'],
+      },
+      ...prev.filter((item) => item.status !== 'PENDING_TR_REVIEW'),
+    ]);
+
+    setToastInfo({
+      show: true,
+      type: 'info',
+      title: 'New Engineering Request Active',
+      message: 'Permohonan perpanjangan baru dari Engineering siap untuk di-review dan di-reject/approve oleh TR.',
+    });
+  };
+
   return {
     permit,
     activeMenu,
@@ -421,11 +538,13 @@ export function usePermitController() {
     handleRejectExtension,
     handlePayExtensionBill,
     handleSetScenario,
+    handleSimulateEngineeringRequest,
     billItems,
     totalBillAmount,
     extensionBill,
     extensionInfo,
     trackingLogs,
+    extensionLogs,
     toastInfo,
     setToastInfo,
   };

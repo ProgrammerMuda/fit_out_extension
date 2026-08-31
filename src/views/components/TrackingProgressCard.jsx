@@ -6,11 +6,68 @@ import {
   CheckSquare,
   CaretUp,
   CaretDown,
+  XCircle,
 } from '@phosphor-icons/react';
 import { Collapse } from 'react-bootstrap';
 
 export function TrackingProgressCard({ trackingLogs = [] }) {
   const [isExpanded, setIsExpanded] = useState(true);
+
+  // Helper for dynamic colors based on log type
+  const getLogTheme = (type) => {
+    switch (type) {
+      case 'rejected':
+        return {
+          icon: <XCircle size={22} weight="fill" />,
+          color: '#dc2626',
+          lineColor: '#fca5a5',
+          titleColor: '#dc2626',
+          noteBg: '#fff5f5',
+          noteBorder: '#dc2626',
+          noteText: '#991b1b',
+        };
+      case 'requested':
+        return {
+          icon: <Clock size={22} weight="fill" />,
+          color: '#ea580c',
+          lineColor: '#fed7aa',
+          titleColor: '#9a3412',
+          noteBg: '#fff7ed',
+          noteBorder: '#ea580c',
+          noteText: '#9a3412',
+        };
+      case 'free':
+        return {
+          icon: <CheckCircle size={22} weight="fill" />,
+          color: '#27b29b',
+          lineColor: '#99f6e4',
+          titleColor: '#0f766e',
+          noteBg: '#f0fdfa',
+          noteBorder: '#27b29b',
+          noteText: '#115e59',
+        };
+      case 'chargeable':
+        return {
+          icon: <CheckCircle size={22} weight="fill" />,
+          color: '#0284c7',
+          lineColor: '#bae6fd',
+          titleColor: '#0369a1',
+          noteBg: '#f0f9ff',
+          noteBorder: '#0284c7',
+          noteText: '#0369a1',
+        };
+      default:
+        return {
+          icon: <CheckCircle size={22} weight="fill" />,
+          color: '#0284c7',
+          lineColor: '#0284c7',
+          titleColor: '#0284c7',
+          noteBg: '#f0f9ff',
+          noteBorder: '#0284c7',
+          noteText: '#0369a1',
+        };
+    }
+  };
 
   return (
     <div className="proa-card overflow-hidden mb-3">
@@ -59,55 +116,60 @@ export function TrackingProgressCard({ trackingLogs = [] }) {
         <div className="p-4 pt-3">
           <div className="mt-2">
             {/* Dynamic Extension Timeline Items */}
-            {trackingLogs.map((log, idx) => (
-              <div key={idx} className="d-flex align-items-stretch gap-3 position-relative mb-4">
-                <div className="d-flex flex-column align-items-center position-relative flex-shrink-0" style={{ width: '24px' }}>
-                  <div style={{ color: '#0284c7', zIndex: 2, backgroundColor: '#ffffff' }}>
-                    <CheckCircle size={22} weight="fill" />
-                  </div>
-                  <div
-                    className="position-absolute"
-                    style={{
-                      top: '20px',
-                      bottom: '-28px',
-                      left: '50%',
-                      transform: 'translateX(-50%)',
-                      width: '2px',
-                      borderLeft: '2px dashed #0284c7',
-                      zIndex: 1,
-                    }}
-                  />
-                </div>
-                <div className="flex-grow-1 pb-1">
-                  <div className="mb-2">
-                    <h6 className="fw-bold text-primary mb-1" style={{ fontSize: '0.86rem' }}>
-                      {log.title}
-                    </h6>
-                    <div className="text-secondary small mb-1" style={{ fontSize: '0.76rem' }}>
-                      {log.actor}
+            {trackingLogs.map((log, idx) => {
+              const theme = getLogTheme(log.type);
+              const noteContent = log.notes || log.note;
+
+              return (
+                <div key={idx} className="d-flex align-items-stretch gap-3 position-relative mb-4">
+                  <div className="d-flex flex-column align-items-center position-relative flex-shrink-0" style={{ width: '24px' }}>
+                    <div style={{ color: theme.color, zIndex: 2, backgroundColor: '#ffffff' }}>
+                      {theme.icon}
                     </div>
-                    <div className="d-flex align-items-center gap-1 text-muted" style={{ fontSize: '0.72rem' }}>
-                      <Clock size={13} />
-                      <span>{log.time}</span>
-                    </div>
-                  </div>
-                  {log.notes && (
                     <div
-                      className="p-3 rounded-2"
+                      className="position-absolute"
                       style={{
-                        backgroundColor: '#f0f9ff',
-                        borderLeft: '3px solid #0284c7',
-                        fontSize: '0.76rem',
-                        color: '#0369a1',
-                        lineHeight: '1.45',
+                        top: '20px',
+                        bottom: '-28px',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        width: '2px',
+                        borderLeft: `2px dashed ${theme.lineColor}`,
+                        zIndex: 1,
                       }}
-                    >
-                      {log.notes}
+                    />
+                  </div>
+                  <div className="flex-grow-1 pb-1">
+                    <div className="mb-2">
+                      <h6 className="fw-bold mb-1" style={{ fontSize: '0.86rem', color: theme.titleColor }}>
+                        {log.title}
+                      </h6>
+                      <div className="text-secondary small mb-1" style={{ fontSize: '0.76rem' }}>
+                        {log.actor}
+                      </div>
+                      <div className="d-flex align-items-center gap-1 text-muted" style={{ fontSize: '0.72rem' }}>
+                        <Clock size={13} />
+                        <span>{log.time}</span>
+                      </div>
                     </div>
-                  )}
+                    {noteContent && (
+                      <div
+                        className="p-3 rounded-2"
+                        style={{
+                          backgroundColor: theme.noteBg,
+                          borderLeft: `3px solid ${theme.noteBorder}`,
+                          fontSize: '0.76rem',
+                          color: theme.noteText,
+                          lineHeight: '1.45',
+                        }}
+                      >
+                        {noteContent}
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
             {/* 1. Milestone: Request Fit Out Permit Submitted */}
             <div className="d-flex align-items-stretch gap-3 position-relative mb-4">
               {/* Left Timeline Column (Centered Icon & Line) */}

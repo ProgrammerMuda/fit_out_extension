@@ -35,6 +35,7 @@ export function MainLayout() {
     extensionBill,
     extensionInfo,
     trackingLogs,
+    extensionLogs,
     toastInfo,
     setToastInfo,
   } = usePermitController();
@@ -83,6 +84,7 @@ export function MainLayout() {
             extensionBill={extensionBill}
             extensionInfo={extensionInfo}
             trackingLogs={trackingLogs}
+            extensionLogs={extensionLogs}
             toastInfo={toastInfo}
             onCloseToast={() => setToastInfo(null)}
           />

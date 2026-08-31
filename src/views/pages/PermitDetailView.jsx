@@ -20,6 +20,7 @@ import { ScheduleInspectionModal } from '../components/ScheduleInspectionModal';
 import { CompleteFitoutModal } from '../components/CompleteFitoutModal';
 import { FitoutExtensionModal } from '../components/FitoutExtensionModal';
 import { RejectedExtensionDetailModal } from '../components/RejectedExtensionDetailModal';
+import { ExtensionHistoryCard } from '../components/ExtensionHistoryCard';
 
 export function PermitDetailView({
   permit,
@@ -45,6 +46,7 @@ export function PermitDetailView({
   extensionBill,
   extensionInfo,
   trackingLogs = [],
+  extensionLogs = [],
   toastInfo,
   onCloseToast,
 }) {
@@ -150,6 +152,22 @@ export function PermitDetailView({
             >
               2. TR Direct Extension
             </button>
+
+            {onSimulateEngineeringRequest && (
+              <button
+                type="button"
+                className="btn btn-sm py-1 px-2.5 rounded-pill fw-bold text-white transition-all shadow-xs"
+                style={{
+                  fontSize: '0.72rem',
+                  backgroundColor: '#ea580c',
+                  borderColor: '#ea580c',
+                }}
+                onClick={onSimulateEngineeringRequest}
+                title="Klik untuk mensimulasikan permohonan perpanjangan baru dari Engineering agar bisa di-reject lagi"
+              >
+                + Request Extension (Eng)
+              </button>
+            )}
           </div>
         )}
       </div>
@@ -235,6 +253,8 @@ export function PermitDetailView({
             tower={permit.tower}
             floor={permit.floor}
           />
+          {/* Dedicated Extension History Card (Displays requests, decisions, rejections & notes) */}
+          <ExtensionHistoryCard extensionLogs={extensionLogs} />
           {/* Unified Extension Information Card (Schedule, Scheme, Decision Notes, and Bill if Chargeable) */}
           {(extensionInfo || permit.isExtended) && (
             <ExtensionInformationCard
